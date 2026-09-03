@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>Statistics QBank</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg1:#0a0f1f;--bg2:#0a0f1f;--bg3:#0a0f1f;--primary:#4fc3f7;--primary-dark:#0288d1;--accent:#ffd54f;--danger:#ef5350;--success:#66bb6a;--text:#e2e8f0;--muted:#a0aec0;--radius:16px;--shadow:0 10px 30px rgba(0,0,0,0.4);--glow:0 0 25px rgba(79,195,247,0.12);--max-width:600px;--bg-card:rgba(255,255,255,0.06);--border-card:rgba(255,255,255,0.06)}
+body.light{--bg1:#fff;--bg2:#fff;--bg3:#fff;--bg-card:#fff;--border-card:#ccc;--text:#000;--muted:#555;--primary:#1565c0;--primary-dark:#0d47a1;--accent:#f9a825;--danger:#c62828;--success:#2e7d32;--shadow:0 2px 8px rgba(0,0,0,0.08);--glow:none;background:#fff!important;background-image:none!important;animation:none!important}
+body{font-family:"Tahoma","Segoe UI","Cairo",sans-serif;background:var(--bg1);min-height:100vh;color:var(--text);display:flex;flex-direction:column;align-items:center;padding:12px 10px;transition:background .4s,color .3s}
+.app{width:100%;max-width:var(--max-width);position:relative;z-index:1}
+.top-header{text-align:center;padding:8px 0 4px}
+.top-header h1{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--primary),var(--primary-dark));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light .top-header h1{background:none;-webkit-background-clip:unset;-webkit-text-fill-color:unset;color:#000;text-shadow:none}
+.top-header .sub{font-size:.9rem;color:var(--primary);font-weight:600}
+.top-header .creator{font-size:.7rem;color:var(--muted);margin-top:4px}
+.top-header .creator .name{color:var(--text);font-weight:700}
+body.light .top-header .creator .name{color:#000}
+.theme-toggle-wrap{display:flex;justify-content:flex-end;margin-bottom:6px}
+.theme-toggle{display:flex;background:var(--bg-card);border:1px solid var(--border-card);border-radius:30px;padding:3px;gap:2px}
+.theme-toggle button{background:transparent;border:none;padding:4px 14px;border-radius:30px;font-size:.8rem;color:var(--muted);cursor:pointer;transition:.3s}
+.theme-toggle button.active{background:var(--primary);color:#fff;font-weight:700}
+body.light .theme-toggle button.active{background:#1565c0;color:#fff}
+.card{background:var(--bg-card);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--border-card);border-radius:var(--radius);box-shadow:var(--shadow),var(--glow);padding:16px 14px;margin-bottom:14px;transition:transform .2s,background .3s,border .3s;color:var(--text)}
+body.light .card{background:#fff;border:1px solid #ccc;backdrop-filter:none}
+.card-title{margin:0 0 12px;font-size:1rem;border-inline-start:3px solid var(--primary);padding-inline-start:10px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.card-title i{color:var(--accent);margin-left:6px}
+.card-title .select-all-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border-card);color:var(--muted);border-radius:12px;padding:2px 12px;font-size:.7rem;cursor:pointer;transition:.2s;font-weight:600}
+body.light .card-title .select-all-btn{background:#f0f0f0;border-color:#ccc;color:#333}
+.card-title .select-all-btn:hover{background:var(--primary);color:#fff;border-color:var(--primary)}
+.action-icons{display:flex;justify-content:space-around;gap:6px;flex-wrap:wrap}
+.action-icon{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 14px;border-radius:12px;border:1.5px solid transparent;background:transparent;color:var(--muted);font-size:.7rem;font-weight:600;min-width:56px}
+.action-icon .icon{font-size:1.5rem}
+.action-icon .label{font-size:.55rem}
+.action-icon.active{border-color:var(--primary);background:rgba(79,195,247,0.08)}
+body.light .action-icon.active{border-color:#1565c0;background:#e3f2fd}
+.sub-options{display:none;padding:8px 10px;margin-top:6px;background:rgba(0,0,0,0.15);border-radius:12px;border:1px solid var(--border-card);flex-wrap:wrap;gap:6px;justify-content:center}
+body.light .sub-options{background:#f5f5f5;border-color:#ccc}
+.sub-options.show{display:flex}
+.sub-options .action-btn{border:1px solid var(--border-card);background:rgba(255,255,255,0.03);border-radius:12px;padding:5px 16px;font-size:.75rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+body.light .sub-options .action-btn{background:#fff;border-color:#ccc;color:#333}
+.sub-options .action-btn.active{border-color:var(--primary);background:rgba(79,195,247,0.12);color:var(--text)}
+body.light .sub-options .action-btn.active{border-color:#1565c0;background:#bbdefb;color:#000}
+.section-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto}
+.section-item{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--border-card);border-radius:10px;padding:8px 12px;cursor:pointer;transition:all .15s;font-size:.85rem;color:var(--text)}
+body.light .section-item{border-color:#ccc}
+.section-item.active{border-color:var(--primary);background:rgba(79,195,247,0.08)}
+body.light .section-item.active{border-color:#1565c0;background:#e3f2fd}
+.section-item .cnt{background:rgba(255,255,255,0.06);border-radius:30px;padding:0 10px;font-size:.7rem;color:var(--muted);font-weight:700;min-width:30px;text-align:center}
+body.light .section-item .cnt{background:#ddd;color:#333}
+.section-item .info-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px}
+.section-item .info-btn:hover{color:var(--primary)}
+#section-explanation{margin-top:12px;padding:16px;background:rgba(0,0,0,0.15);border-radius:var(--radius);border:1px solid var(--border-card);display:none}
+body.light #section-explanation{background:#f5f5f5;border-color:#ccc}
+#section-explanation.show{display:block}
+.explain-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.explain-controls{display:flex;gap:6px;align-items:center}
+.explain-controls .lang-btn{background:rgba(255,255,255,0.06);border:1px solid var(--border-card);color:var(--muted);padding:4px 10px;border-radius:20px;font-size:.7rem;cursor:pointer;font-weight:600}
+body.light .explain-controls .lang-btn{background:#fff;border-color:#ccc;color:#333}
+.explain-controls .lang-btn.active{border-color:var(--primary);background:rgba(79,195,247,0.12);color:var(--text)}
+body.light .explain-controls .lang-btn.active{border-color:#1565c0;background:#bbdefb;color:#000}
+.explain-controls .close-explain{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
+.explain-controls .close-explain:hover{color:var(--danger)}
+#explain-text{font-size:.9rem;line-height:2;color:var(--text);background:rgba(0,0,0,0.1);padding:12px;border-radius:10px;min-height:60px;white-space:pre-wrap}
+body.light #explain-text{background:#fff;color:#000;border:1px solid #ccc}
+.big-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(79,195,247,0.25);transition:all .15s;position:relative;overflow:hidden}
+body.light .big-btn{background:#1565c0;color:#fff;box-shadow:0 2px 8px rgba(21,101,192,0.3)}
+.big-btn.secondary{background:linear-gradient(135deg,#4a5568,#2d3748)}
+body.light .big-btn.secondary{background:#757575}
+.big-btn.warn{background:linear-gradient(135deg,var(--accent),#f57f17)}
+body.light .big-btn.warn{background:#f9a825;color:#000}
+.big-btn:disabled{opacity:.5;cursor:not-allowed}
+.stats-row{display:flex;justify-content:space-around;gap:8px;text-align:center;margin:6px 0}
+.stats-row .stat .num{font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,var(--primary),#81d4fa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+body.light .stats-row .stat .num{background:none;-webkit-background-clip:unset;-webkit-text-fill-color:unset;color:#000}
+.stats-row .stat .lbl{font-size:.7rem;color:var(--muted)}
+.progress-stats{display:flex;align-items:center;gap:16px}
+.progress-ring{position:relative;width:70px;height:70px;flex-shrink:0}
+.progress-ring svg{transform:rotate(-90deg);width:70px;height:70px}
+.progress-ring .bg{fill:none;stroke:var(--border-card);stroke-width:6}
+body.light .progress-ring .bg{stroke:#ccc}
+.progress-ring .fg{fill:none;stroke:var(--primary);stroke-width:6;stroke-linecap:round;stroke-dasharray:176;stroke-dashoffset:176;transition:stroke-dashoffset .6s}
+body.light .progress-ring .fg{stroke:#1565c0}
+.progress-ring .center-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:700;color:var(--text)}
+.weak-link{margin-top:10px;font-size:.75rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:6px}
+.weak-link i{color:var(--accent)}
+.action-row-bottom{display:flex;gap:8px;margin-top:10px}
+.action-row-bottom .big-btn{flex:1;font-size:.75rem;padding:8px;margin-top:0}
+#screen-quiz,#screen-results{display:none}
+#screen-quiz.active,#screen-results.active{display:block}
+.quiz-meta{display:flex;justify-content:space-between;align-items:center;font-size:.75rem;color:var(--muted);margin-bottom:8px}
+#timer-badge{font-weight:600;font-size:.8rem;background:rgba(255,255,255,0.05);padding:2px 12px;border-radius:30px;border:1px solid var(--border-card)}
+body.light #timer-badge{background:#f0f0f0;border-color:#ccc}
+#timer-badge.warn{background:rgba(255,213,79,0.15);border-color:var(--accent);color:var(--accent)}
+#timer-badge.danger{background:rgba(239,83,80,0.2);border-color:var(--danger);color:var(--danger);animation:pulse .7s infinite alternate}
+@keyframes pulse{0%{opacity:1}100%{opacity:.5}}
+.progress-wrap{background:rgba(255,255,255,0.06);border-radius:30px;height:4px;overflow:hidden;margin-bottom:12px}
+body.light .progress-wrap{background:#ddd}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));width:0%;transition:width .3s}
+body.light .progress-bar{background:linear-gradient(90deg,#1565c0,#f9a825)}
+.q-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:4px}
+.q-tag{display:inline-block;background:rgba(79,195,247,0.10);color:var(--primary);font-size:.65rem;font-weight:700;padding:2px 12px;border-radius:30px;border:1px solid rgba(79,195,247,0.06);margin-bottom:8px}
+body.light .q-tag{background:#e3f2fd;color:#1565c0;border-color:#bbdefb}
+.q-en{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.6;direction:ltr;text-align:left;word-wrap:break-word}
+.q-ar{font-size:.9rem;color:var(--muted);margin-bottom:14px;line-height:1.7;direction:rtl;text-align:right;word-wrap:break-word}
+.options{display:flex;flex-direction:column;gap:8px}
+.option{display:flex;align-items:center;gap:8px;border:1px solid var(--border-card);border-radius:12px;padding:10px 14px;cursor:pointer;transition:all .15s;background:rgba(255,255,255,0.02);direction:ltr}
+body.light .option{background:#fff;border-color:#ccc}
+.option .opt-en{font-weight:600;color:var(--text);font-size:.9rem;flex:1;direction:ltr;text-align:left}
+.option .opt-ar{color:var(--muted);font-size:.8rem;direction:rtl;text-align:right;flex:1}
+.option .mark{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0}
+.option.selected{border-color:var(--primary);background:rgba(79,195,247,0.06)}
+body.light .option.selected{border-color:#1565c0;background:#e3f2fd}
+.option.correct{border-color:var(--success);background:rgba(102,187,106,0.08)}
+body.light .option.correct{border-color:#2e7d32;background:#e8f5e9}
+.option.wrong{border-color:var(--danger);background:rgba(239,83,80,0.08)}
+body.light .option.wrong{border-color:#c62828;background:#ffebee}
+.option.disabled{cursor:default;opacity:.8}
+.feedback-box{margin-top:12px;padding:12px;border-radius:12px;font-size:.85rem;line-height:1.6}
+.feedback-box.correct{background:rgba(102,187,106,0.08);border:1px solid rgba(102,187,106,0.15);color:#a7f3d0}
+body.light .feedback-box.correct{background:#e8f5e9;border-color:#2e7d32;color:#000}
+.feedback-box.wrong{background:rgba(239,83,80,0.08);border:1px solid rgba(239,83,80,0.15);color:#fecaca}
+body.light .feedback-box.wrong{background:#ffebee;border-color:#c62828;color:#000}
+.feedback-box .fb-title{font-weight:700;margin-bottom:4px}
+.nav-row{display:flex;gap:8px;margin-top:12px}
+.nav-row .big-btn{flex:1;margin-top:0;font-size:.85rem;padding:10px}
+.score-circle{width:120px;height:120px;border-radius:50%;margin:8px auto 14px;display:flex;align-items:center;justify-content:center;flex-direction:column;background:conic-gradient(var(--primary) calc(var(--pct)*1%),rgba(255,255,255,0.04) 0);position:relative}
+body.light .score-circle{background:conic-gradient(#1565c0 calc(var(--pct)*1%),#e0e0e0 0)}
+.score-circle::before{content:"";position:absolute;width:90px;height:90px;background:var(--bg1);backdrop-filter:blur(4px);border-radius:50%;opacity:.85}
+body.light .score-circle::before{background:#fff;opacity:.9}
+.score-circle .pct{position:relative;font-size:1.8rem;font-weight:900;color:#fff}
+body.light .score-circle .pct{color:#000}
+.score-circle .lbl{position:relative;font-size:.7rem;color:var(--muted)}
+.mistake-item{border:1px solid var(--border-card);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(255,255,255,0.02)}
+body.light .mistake-item{background:#fff;border-color:#ccc}
+.mistake-item .m-q{font-weight:700;margin-bottom:2px}
+.mistake-item .m-you{color:var(--danger);font-size:.8rem}
+body.light .mistake-item .m-you{color:#c62828}
+.mistake-item .m-correct{color:var(--success);font-size:.8rem}
+body.light .mistake-item .m-correct{color:#2e7d32}
+.mistake-toggle{background:none;border:1px solid var(--border-card);border-radius:8px;padding:4px 12px;cursor:pointer;color:var(--text);font-size:.75rem;margin-top:6px}
+body.light .mistake-toggle{border-color:#ccc;color:#000}
+.mistake-detail{margin-top:10px;border:1px solid var(--border-card);border-radius:10px;padding:12px;background:rgba(255,255,255,0.03)}
+body.light .mistake-detail{background:#f9f9f9;border-color:#ccc}
+.mistake-detail .opt-row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-card)}
+body.light .mistake-detail .opt-row{border-color:#ddd}
+.mistake-detail .opt-row:last-child{border-bottom:none}
+.mistake-detail .opt-label{flex:1}
+.mistake-detail .opt-status{font-size:1rem;margin-right:8px}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);font-size:.7rem;margin-top:20px;margin-bottom:8px;opacity:.6}
+footer .name{color:var(--primary);font-weight:700}
+body.light footer .name{color:#1565c0}
+.word-en{display:inline-block;cursor:default;transition:background .15s,transform .1s;padding:1px 2px;border-radius:4px;direction:ltr}
+.word-en:active{background:rgba(79,195,247,0.15);transform:scale(.97)}
+body.light .word-en:active{background:#bbdefb}
+.word-en.speaking{background:rgba(255,213,79,0.25);box-shadow:0 0 10px rgba(255,213,79,0.2)}
+body.light .word-en.speaking{background:#fff9c4}
+.speech-hint{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);color:#fff;padding:6px 18px;border-radius:30px;font-size:.8rem;pointer-events:none;opacity:0;transition:opacity .3s;z-index:999;border:1px solid rgba(255,255,255,0.1)}
+body.light .speech-hint{background:#f0f0f0;color:#000;border-color:#ccc}
+.speech-hint.show{opacity:1}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.25);transform:scale(0);animation:rippleAnim .5s linear;pointer-events:none}
+body.light .ripple{background:rgba(0,0,0,0.1)}
+@keyframes rippleAnim{to{transform:scale(3);opacity:0}}
+@media(max-width:480px){body{padding:8px 6px}.app{max-width:100%}.top-header h1{font-size:1.5rem}.card{padding:12px 10px}.action-icon{padding:4px 8px;min-width:44px}.action-icon .icon{font-size:1.2rem}.q-en{font-size:.9rem}.q-ar{font-size:.8rem}.option{padding:8px 10px}.big-btn{font-size:.85rem;padding:10px}.score-circle{width:100px;height:100px}.score-circle::before{width:75px;height:75px}.score-circle .pct{font-size:1.5rem}.progress-ring{width:56px;height:56px}.progress-ring svg{width:56px;height:56px}}
+.tf-badge{display:inline-block;font-size:.6rem;font-weight:700;padding:1px 8px;border-radius:12px;margin-right:6px;background:rgba(79,195,247,0.15);color:var(--primary)}
+body.light .tf-badge{background:#e3f2fd;color:#1565c0}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top-header"><h1>  استعِن باللَّهِ ولا تعجِزْ ♥️ </h1><div class="sub">Statistics QBank</div><div class="creator"><i class="fas fa-user-graduate"></i> Created by <span class="name">MR. YASSIN THARWAT</span></div></div>
+<div class="theme-toggle-wrap"><div class="theme-toggle" id="themeToggle"><button class="active" data-theme="dark" onclick="setTheme('dark')"><i class="fas fa-moon"></i></button><button data-theme="light" onclick="setTheme('light')"><i class="fas fa-sun"></i></button></div></div>
+
+<div id="main-screen">
+<div class="card"><div class="card-title"><i class="fas fa-sliders-h"></i> الإجراءات</div>
+<div class="action-icons">
+<div class="action-icon active" data-target="modeOptions" onclick="toggleOptions('modeOptions')"><span class="icon">🎯</span><span class="label">المذاكرة</span></div>
+<div class="action-icon" data-target="orderOptions" onclick="toggleOptions('orderOptions')"><span class="icon">🔀</span><span class="label">الترتيب</span></div>
+<div class="action-icon" data-target="langOptions" onclick="toggleOptions('langOptions')"><span class="icon">🌐</span><span class="label">اللغة</span></div>
+<div class="action-icon" data-target="timerOptions" onclick="toggleOptions('timerOptions')"><span class="icon">⏱️</span><span class="label">المؤقت</span></div>
+</div>
+<div id="modeOptions" class="sub-options show"><button class="action-btn active" data-mode="practice" onclick="selectMode('practice')">تدريب</button><button class="action-btn" data-mode="test" onclick="selectMode('test')">اختبار</button></div>
+<div id="orderOptions" class="sub-options"><button class="action-btn active" data-order="device" onclick="selectOrder('device')">بالترتيب</button><button class="action-btn" data-order="random" onclick="selectOrder('random')">عشوائي</button></div>
+<div id="langOptions" class="sub-options"><button class="action-btn active" data-translate="yes" onclick="selectTranslate('yes')">ترجمة</button><button class="action-btn" data-translate="no" onclick="selectTranslate('no')">EN</button></div>
+<div id="timerOptions" class="sub-options"><button class="action-btn active" data-timer="0" onclick="selectTimer(0)">تثبيت</button><button class="action-btn" data-timer="5" onclick="selectTimer(5)">5s</button><button class="action-btn" data-timer="10" onclick="selectTimer(10)">10s</button></div>
+</div>
+
+<div class="card"><div class="card-title"><span><i class="fas fa-layer-group"></i> الأجزاء المختارة</span><button class="select-all-btn" id="selectAllBtn" onclick="toggleAllSections()">تحديد الكل</button></div><div id="section-list" class="section-list"></div>
+<div id="section-explanation"><div class="explain-header"><h3 id="explain-title"></h3><div class="explain-controls"><button class="lang-btn active" data-lang="ar" onclick="setExplainLang('ar')">🇪🇬 عربي</button><button class="lang-btn" data-lang="en" onclick="setExplainLang('en')">🇬🇧 English</button><button class="close-explain" onclick="closeExplanation()"><i class="fas fa-times"></i></button></div></div><div id="explain-text" class="ar"></div></div></div>
+
+<button class="big-btn" onclick="startQuiz()"><i class="fas fa-play"></i> أبداً المذاكرة</button>
+
+<div class="card" id="progressCard"><div class="card-title"><i class="fas fa-chart-line"></i> تقدمك</div>
+<div class="progress-stats"><div class="progress-ring"><svg viewBox="0 0 70 70"><circle class="bg" cx="35" cy="35" r="28"/><circle class="fg" id="progressCircle" cx="35" cy="35" r="28" stroke-dashoffset="176"/></svg><div class="center-text" id="progressPercent">0<small>%</small></div></div>
+<div class="stats-row" style="flex:1;margin:0;"><div class="stat"><div class="num" id="statAttempted">0</div><div class="lbl">تم حله</div></div><div class="stat"><div class="num" id="statCorrect">0</div><div class="lbl">صح</div></div><div class="stat"><div class="num" id="statWrong">0</div><div class="lbl">غلط</div></div></div></div>
+<div class="weak-link" id="weakLink" onclick="startWeakSectionQuiz()"><i class="fas fa-lightbulb"></i> أضعف نقطة: <span id="weakSectionName">-</span> (<span id="weakSectionRate">0%</span>)</div>
+<div class="action-row-bottom"><button class="big-btn warn" onclick="reviewMistakes()"><i class="fas fa-undo-alt"></i> راجع أخطائي</button><button class="big-btn secondary" onclick="resetProgress()"><i class="fas fa-trash-alt"></i> تصفير</button></div></div>
+</div>
+
+<div id="screen-quiz"><div class="quiz-meta"><span id="quiz-position"><i class="fas fa-question-circle"></i> 1 / 10</span><span id="timer-badge" class="hidden"><i class="fas fa-hourglass-half"></i> 30</span><span id="quiz-score"><i class="fas fa-check-circle" style="color:var(--success);"></i> 0 <i class="fas fa-times-circle" style="color:var(--danger);margin-right:6px;"></i> 0</span></div><div class="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+<div class="card"><div class="q-header"><div class="q-tag" id="q-section-tag"><i class="fas fa-tag"></i> القسم</div></div><div class="q-en" id="q-en"></div><div class="q-ar" id="q-ar"></div><div class="options" id="options"></div><div id="feedback" class="feedback-box hidden"></div><div class="nav-row"><button class="big-btn secondary" id="btn-quit" onclick="quitQuiz()" style="flex:0 0 60px;"><i class="fas fa-sign-out-alt"></i></button><button class="big-btn secondary" id="btn-prev" onclick="previousQuestion()" disabled><i class="fas fa-arrow-right"></i></button><button class="big-btn" id="btn-next" onclick="nextQuestion()" disabled><i class="fas fa-arrow-left"></i> التالي</button></div></div></div>
+
+<div id="screen-results"><div class="card" style="text-align:center;"><div class="card-title" style="border:none;text-align:center;padding:0;"><i class="fas fa-trophy" style="color:var(--accent);"></i> نتيجتك</div><div class="score-circle" id="score-circle" style="--pct:0;"><div class="pct" id="result-pct">0%</div><div class="lbl">النسبة</div></div><div class="stats-row"><div class="stat"><div class="num" id="res-total">0</div><div class="lbl">إجمالي</div></div><div class="stat"><div class="num" id="res-correct" style="color:var(--success);">0</div><div class="lbl">صح</div></div><div class="stat"><div class="num" id="res-wrong" style="color:var(--danger);">0</div><div class="lbl">غلط</div></div></div><button class="big-btn" onclick="goHome()"><i class="fas fa-home"></i> الرئيسية</button><button class="big-btn warn hidden" id="btn-show-mistakes" onclick="showMistakesList()"><i class="fas fa-list-ul"></i> الأخطاء</button></div><div id="mistakes-list-wrap" class="card hidden"><div class="card-title"><i class="fas fa-exclamation-triangle" style="color:var(--danger);"></i> أخطائك</div><div id="mistakes-list"></div></div></div>
+
+<div id="speech-hint" class="speech-hint"><i class="fas fa-volume-up"></i> جارٍ النطق...</div>
+<footer>Created by <span class="name">MR. YASSIN THARWAT</span></footer>
+</div>
+
+<script>
+// ======================================================================
+// البنك النهائي - 244 سؤالاً (مطابق 100% للملفات الثلاثة)
+// ======================================================================
+const ORIGINAL_BANK = [
+  // ==================== القسم 1: أساسيات العينات (33 MCQ + 26 TF = 59) ====================
+  {
+    name:"أساسيات العينات",
+    nameEn:"Sampling Basics",
+    questions:[
+      // MCQ (1-33)
+      {num:1,en:"What is a population?",ar:"ما هو المجتمع (Population)؟",options:[{en:"A. A small group",ar:"أ. مجموعة صغيرة",correct:false},{en:"B. Entire group of individuals",ar:"ب. المجموعة الكاملة من الأفراد",correct:true},{en:"C. Random sample",ar:"ج. عينة عشوائية",correct:false},{en:"D. Selected data",ar:"د. بيانات مختارة",correct:false}],explain_ar:"المجتمع هو المجموعة الكاملة من الأفراد أو العناصر التي نرغب في دراستها."},
+      {num:2,en:"Sample refers to:",ar:"العينة تشير إلى:",options:[{en:"A. Whole population",ar:"أ. المجتمع كامل",correct:false},{en:"B. Subset of population",ar:"ب. جزء من المجتمع",correct:true},{en:"C. Only data analysis",ar:"ج. تحليل البيانات فقط",correct:false},{en:"D. Statistics",ar:"د. الإحصاء",correct:false}],explain_ar:"العينة هي مجموعة فرعية من المجتمع يتم اختيارها لتمثيله."},
+      {num:3,en:"Sampling is:",ar:"أخذ العينات هو:",options:[{en:"A. Data analysis",ar:"أ. تحليل البيانات",correct:false},{en:"B. Data storage",ar:"ب. تخزين البيانات",correct:false},{en:"C. Selecting subset from population",ar:"ج. اختيار مجموعة فرعية من المجتمع",correct:true},{en:"D. Recording data",ar:"د. تسجيل البيانات",correct:false}],explain_ar:"أخذ العينات هو عملية اختيار مجموعة فرعية من المجتمع لدراستها."},
+      {num:4,en:"Probability sampling depends on:",ar:"أخذ العينات الاحتمالي يعتمد على:",options:[{en:"A. Random selection",ar:"أ. الاختيار العشوائي",correct:true},{en:"B. Convenience",ar:"ب. الملاءمة",correct:false},{en:"C. Judgment",ar:"ج. الحكم الشخصي",correct:false},{en:"D. Bias",ar:"د. الانحياز",correct:false}],explain_ar:"في العينات الاحتمالية، يتم الاختيار عشوائيًا، مما يعطي كل عنصر فرصة متساوية."},
+      {num:5,en:"Nonprobability sampling is:",ar:"أخذ العينات غير الاحتمالي هو:",options:[{en:"A. Random",ar:"أ. عشوائي",correct:false},{en:"B. Biased",ar:"ب. متحيز",correct:true},{en:"C. Equal chance",ar:"ج. فرصة متساوية",correct:false},{en:"D. Scientific",ar:"د. علمي",correct:false}],explain_ar:"العينات غير الاحتمالية غالبًا ما تكون متحيزة لأنها لا تعتمد على الاختيار العشوائي."},
+      {num:6,en:"Simple random sampling ensures:",ar:"أخذ العينات العشوائية البسيطة يضمن:",options:[{en:"A. Bias",ar:"أ. انحياز",correct:false},{en:"B. Equal chance",ar:"ب. فرصة متساوية",correct:true},{en:"C. Judgment",ar:"ج. حكم شخصي",correct:false},{en:"D. Convenience",ar:"د. ملاءمة",correct:false}],explain_ar:"في العشوائية البسيطة، كل فرد في المجتمع له فرصة متساوية في الاختيار."},
+      {num:7,en:"Stratified sampling divides population into:",ar:"أخذ العينات الطبقية يقسم المجتمع إلى:",options:[{en:"A. Clusters",ar:"أ. مجموعات عنقودية",correct:false},{en:"B. Strata",ar:"ب. طبقات",correct:true},{en:"C. Groups randomly",ar:"ج. مجموعات عشوائية",correct:false},{en:"D. Lists",ar:"د. قوائم",correct:false}],explain_ar:"في العينات الطبقية، نقسم المجتمع إلى طبقات (متجانسة) ثم نأخذ عينات من كل طبقة."},
+      {num:8,en:"Cluster sampling is used when population is:",ar:"أخذ العينات العنقودية يستخدم عندما يكون المجتمع:",options:[{en:"A. Small",ar:"أ. صغيرًا",correct:false},{en:"B. Similar",ar:"ب. متشابهًا",correct:false},{en:"C. Geographically spread",ar:"ج. موزعًا جغرافيًا",correct:true},{en:"D. Random",ar:"د. عشوائيًا",correct:false}],explain_ar:"تُستخدم العينات العنقودية عندما يكون المجتمع موزعًا على مساحة جغرافية واسعة، لتوفير الوقت والجهد."},
+      {num:9,en:"Systematic sampling selects:",ar:"أخذ العينات المنتظم يختار:",options:[{en:"A. Random people",ar:"أ. أشخاص عشوائيين",correct:false},{en:"B. Every kth element",ar:"ب. كل عنصر k",correct:true},{en:"C. Only volunteers",ar:"ج. المتطوعين فقط",correct:false},{en:"D. Experts",ar:"د. الخبراء",correct:false}],explain_ar:"في العينات المنتظمة، نختار كل عنصر رقم k من قائمة مرتبة."},
+      {num:10,en:"Nonprobability sampling includes:",ar:"أخذ العينات غير الاحتمالي يشمل:",options:[{en:"A. Random sampling",ar:"أ. العينات العشوائية",correct:false},{en:"B. Convenience sampling",ar:"ب. عينات الملاءمة",correct:true},{en:"C. Systematic sampling",ar:"ج. العينات المنتظمة",correct:false},{en:"D. Stratified",ar:"د. الطبقية",correct:false}],explain_ar:"أمثلة على العينات غير الاحتمالية: عينة الملاءمة، عينة الحكم، عينة الحصص."},
+      {num:11,en:"Which of the following is a probability sampling method?",ar:"أي من التالي هو أسلوب عينات احتمالي؟",options:[{en:"A. Convenience",ar:"أ. الملاءمة",correct:false},{en:"B. Quota",ar:"ب. الحصص",correct:false},{en:"C. Simple random",ar:"ج. العشوائية البسيطة",correct:true},{en:"D. Purposive",ar:"د. الهادفة",correct:false}],explain_ar:"العشوائية البسيطة، الطبقية، المنتظمة، والعنقودية كلها أمثلة على العينات الاحتمالية."},
+      {num:12,en:"Which sampling method is most biased?",ar:"أي طريقة عينات هي الأكثر انحيازًا؟",options:[{en:"A. Random",ar:"أ. العشوائية",correct:false},{en:"B. Stratified",ar:"ب. الطبقية",correct:false},{en:"C. Convenience",ar:"ج. الملاءمة",correct:true},{en:"D. Systematic",ar:"د. المنتظمة",correct:false}],explain_ar:"عينة الملاءمة تعتمد على سهولة الوصول، مما يؤدي إلى انحياز كبير."},
+      {num:13,en:"In stratified sampling, population is divided based on:",ar:"في أخذ العينات الطبقية، يقسم المجتمع بناءً على:",options:[{en:"A. Random choice",ar:"أ. اختيار عشوائي",correct:false},{en:"B. Important variables",ar:"ب. متغيرات مهمة",correct:true},{en:"C. Location only",ar:"ج. الموقع فقط",correct:false},{en:"D. Time",ar:"د. الوقت",correct:false}],explain_ar:"نقسم المجتمع إلى طبقات بناءً على متغيرات مهمة مثل العمر، الجنس، الدخل، إلخ."},
+      {num:14,en:"Cluster sampling selects:",ar:"أخذ العينات العنقودية يختار:",options:[{en:"A. Individuals randomly",ar:"أ. أفرادًا عشوائيين",correct:false},{en:"B. Groups or clusters",ar:"ب. مجموعات أو عناقيد",correct:true},{en:"C. Only experts",ar:"ج. الخبراء فقط",correct:false},{en:"D. Only volunteers",ar:"د. المتطوعين فقط",correct:false}],explain_ar:"في العينات العنقودية، نختار مجموعات (مثل المدارس، المدن) وليس أفرادًا منفردين."},
+      {num:15,en:"Systematic sampling interval is calculated by:",ar:"فاصل أخذ العينات المنتظم يحسب بواسطة:",options:[{en:"A. Sample ÷ Population",ar:"أ. العينة ÷ المجتمع",correct:false},{en:"B. Population ÷ Sample",ar:"ب. المجتمع ÷ العينة",correct:true},{en:"C. Random selection",ar:"ج. اختيار عشوائي",correct:false},{en:"D. Guessing",ar:"د. التخمين",correct:false}],explain_ar:"الفاصل k = حجم المجتمع ÷ حجم العينة."},
+      {num:16,en:"Nonprobability sampling does NOT allow:",ar:"أخذ العينات غير الاحتمالي لا يسمح بـ:",options:[{en:"A. Bias",ar:"أ. الانحياز",correct:false},{en:"B. Equal chance",ar:"ب. فرصة متساوية",correct:true},{en:"C. Convenience",ar:"ج. الملاءمة",correct:false},{en:"D. Judgment",ar:"د. الحكم الشخصي",correct:false}],explain_ar:"في العينات غير الاحتمالية، لا تتساوى فرص اختيار الأفراد."},
+      {num:17,en:"Convenience sampling is based on:",ar:"أخذ العينات بالملاءمة يعتمد على:",options:[{en:"A. Randomness",ar:"أ. العشوائية",correct:false},{en:"B. Availability",ar:"ب. التوفر",correct:true},{en:"C. Probability",ar:"ج. الاحتمال",correct:false},{en:"D. Statistics",ar:"د. الإحصاء",correct:false}],explain_ar:"عينة الملاءمة تعتمد على الأفراد المتاحين بسهولة."},
+      {num:18,en:"Quota sampling is similar to:",ar:"أخذ العينات بالحصص يشبه:",options:[{en:"A. Cluster",ar:"أ. العنقودية",correct:false},{en:"B. Stratified",ar:"ب. الطبقية",correct:true},{en:"C. Random",ar:"ج. العشوائية",correct:false},{en:"D. Systematic",ar:"د. المنتظمة",correct:false}],explain_ar:"تشبه الحصص الطبقية لكن دون عشوائية."},
+      {num:19,en:"Purposive sampling depends on:",ar:"أخذ العينات الهادفة يعتمد على:",options:[{en:"A. Chance",ar:"أ. الصدفة",correct:false},{en:"B. Researcher judgment",ar:"ب. حكم الباحث",correct:true},{en:"C. Randomization",ar:"ج. العشوائية",correct:false},{en:"D. Probability",ar:"د. الاحتمال",correct:false}],explain_ar:"في العينات الهادفة، يختار الباحث العناصر التي يراها مناسبة للدراسة."},
+      {num:20,en:"Sampling helps to:",ar:"أخذ العينات يساعد على:",options:[{en:"A. Increase cost",ar:"أ. زيادة التكلفة",correct:false},{en:"B. Save time",ar:"ب. توفير الوقت",correct:true},{en:"C. Avoid analysis",ar:"ج. تجنب التحليل",correct:false},{en:"D. Ignore population",ar:"د. تجاهل المجتمع",correct:false}],explain_ar:"أخذ العينات يوفر الوقت والتكلفة مقارنة بدراسة المجتمع بأكمله."},
+      {num:21,en:"Information design involves:",ar:"تصميم المعلومات يشمل:",options:[{en:"A. Data hiding",ar:"أ. إخفاء البيانات",correct:false},{en:"B. Presenting information",ar:"ب. تقديم المعلومات",correct:true},{en:"C. Ignoring data",ar:"ج. تجاهل البيانات",correct:false},{en:"D. Deleting data",ar:"د. حذف البيانات",correct:false}],explain_ar:"تصميم المعلومات يهدف إلى تقديم البيانات بطريقة واضحة وجذابة."},
+      {num:22,en:"Sampling reduces:",ar:"أخذ العينات يقلل:",options:[{en:"A. Accuracy",ar:"أ. الدقة",correct:false},{en:"B. Cost",ar:"ب. التكلفة",correct:true},{en:"C. Bias",ar:"ج. الانحياز",correct:false},{en:"D. Data",ar:"د. البيانات",correct:false}],explain_ar:"أخذ العينات يقلل التكلفة والوقت مقارنة بدراسة المجتمع كاملًا."},
+      {num:23,en:"Nonprobability sampling may lead to:",ar:"أخذ العينات غير الاحتمالي قد يؤدي إلى:",options:[{en:"A. Accuracy",ar:"أ. الدقة",correct:false},{en:"B. Bias",ar:"ب. الانحياز",correct:true},{en:"C. Equality",ar:"ج. المساواة",correct:false},{en:"D. Precision",ar:"د. الدقة",correct:false}],explain_ar:"العينات غير الاحتمالية غالبًا ما تؤدي إلى انحياز بسبب عدم العشوائية."},
+      {num:24,en:"Cluster sampling example includes:",ar:"مثال على أخذ العينات العنقودية يشمل:",options:[{en:"A. Selecting cities",ar:"أ. اختيار مدن",correct:true},{en:"B. Random numbers",ar:"ب. أرقام عشوائية",correct:false},{en:"C. Surveys only",ar:"ج. استبيانات فقط",correct:false},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"مثال: اختيار عدد من المدن ثم دراسة جميع الأفراد في تلك المدن."},
+      {num:25,en:"Simple random sampling is:",ar:"أخذ العينات العشوائية البسيطة هو:",options:[{en:"A. Biased",ar:"أ. متحيز",correct:false},{en:"B. Fair",ar:"ب. عادل",correct:true},{en:"C. Judgmental",ar:"ج. حكمي",correct:false},{en:"D. Complex",ar:"د. معقد",correct:false}],explain_ar:"العشوائية البسيطة تعطي فرصة متساوية للجميع، لذا فهي عادلة."},
+      {num:26,en:"Sampling interval in systematic sampling is:",ar:"فاصل أخذ العينات المنتظم هو:",options:[{en:"A. Constant",ar:"أ. ثابت",correct:true},{en:"B. Random",ar:"ب. عشوائي",correct:false},{en:"C. Zero",ar:"ج. صفر",correct:false},{en:"D. Unknown",ar:"د. غير معروف",correct:false}],explain_ar:"الفاصل في العينات المنتظمة ثابت (k = N/n)."},
+      {num:27,en:"Sample size is:",ar:"حجم العينة هو:",options:[{en:"A. Equal to population",ar:"أ. مساوٍ للمجتمع",correct:false},{en:"B. Less than population",ar:"ب. أقل من المجتمع",correct:true},{en:"C. Greater than population",ar:"ج. أكبر من المجتمع",correct:false},{en:"D. Random",ar:"د. عشوائي",correct:false}],explain_ar:"حجم العينة دائمًا أقل من حجم المجتمع."},
+      {num:28,en:"Sampling improves:",ar:"أخذ العينات يحسن:",options:[{en:"A. Cost efficiency",ar:"أ. كفاءة التكلفة",correct:true},{en:"B. Errors",ar:"ب. الأخطاء",correct:false},{en:"C. Time waste",ar:"ج. إهدار الوقت",correct:false},{en:"D. Bias",ar:"د. الانحياز",correct:false}],explain_ar:"أخذ العينات يزيد من كفاءة التكلفة."},
+      {num:29,en:"Nonprobability sampling lacks:",ar:"أخذ العينات غير الاحتمالي يفتقر إلى:",options:[{en:"A. Randomness",ar:"أ. العشوائية",correct:true},{en:"B. Bias",ar:"ب. الانحياز",correct:false},{en:"C. Cost",ar:"ج. التكلفة",correct:false},{en:"D. Time",ar:"د. الوقت",correct:false}],explain_ar:"العينات غير الاحتمالية تفتقر إلى العشوائية."},
+      {num:30,en:"Purposive sampling selects:",ar:"أخذ العينات الهادفة يختار:",options:[{en:"A. Typical cases",ar:"أ. حالات نموذجية",correct:true},{en:"B. Random cases",ar:"ب. حالات عشوائية",correct:false},{en:"C. All cases",ar:"ج. جميع الحالات",correct:false},{en:"D. No cases",ar:"د. لا حالات",correct:false}],explain_ar:"يختار الباحث حالات نموذجية أو محددة."},
+      {num:31,en:"Convenience sampling saves:",ar:"أخذ العينات بالملاءمة يوفر:",options:[{en:"A. Time",ar:"أ. الوقت",correct:false},{en:"B. Money",ar:"ب. المال",correct:false},{en:"C. Both",ar:"ج. كليهما",correct:true},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"عينة الملاءمة توفر الوقت والمال."},
+      {num:32,en:"Stratified sampling improves:",ar:"أخذ العينات الطبقية يحسن:",options:[{en:"A. Representation",ar:"أ. التمثيل",correct:true},{en:"B. Bias",ar:"ب. الانحياز",correct:false},{en:"C. Error",ar:"ج. الخطأ",correct:false},{en:"D. Randomness",ar:"د. العشوائية",correct:false}],explain_ar:"العينات الطبقية تضمن تمثيل جميع الفئات."},
+      {num:33,en:"Cluster sampling reduces:",ar:"أخذ العينات العنقودية يقلل:",options:[{en:"A. Cost",ar:"أ. التكلفة",correct:false},{en:"B. Time",ar:"ب. الوقت",correct:false},{en:"C. Effort",ar:"ج. الجهد",correct:false},{en:"D. All",ar:"د. كل ما سبق",correct:true}],explain_ar:"العينات العنقودية تقلل التكلفة والوقت والجهد."},
+      // TF (1-15, 31-38, 46-47, 50)
+      {num:34,en:"Population means the entire group under study.",ar:"المجتمع يعني المجموعة الكاملة قيد الدراسة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:35,en:"Sample is always larger than population.",ar:"العينة دائمًا أكبر من المجتمع.",isTF:true,correct:false,explain_ar:"خطأ، العينة أصغر من المجتمع."},
+      {num:36,en:"Sampling is selecting a subset of population.",ar:"أخذ العينات هو اختيار مجموعة فرعية من المجتمع.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:37,en:"Probability sampling uses random selection.",ar:"أخذ العينات الاحتمالي يستخدم الاختيار العشوائي.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:38,en:"Nonprobability sampling is always unbiased.",ar:"أخذ العينات غير الاحتمالي دائمًا غير متحيز.",isTF:true,correct:false,explain_ar:"خطأ، غالبًا ما يكون متحيزًا."},
+      {num:39,en:"Simple random sampling gives equal chance to all elements.",ar:"أخذ العينات العشوائية البسيطة يعطي فرصة متساوية لجميع العناصر.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:40,en:"Stratified sampling divides population randomly.",ar:"أخذ العينات الطبقية يقسم المجتمع عشوائيًا.",isTF:true,correct:false,explain_ar:"خطأ، يقسمه إلى طبقات بناءً على خصائص."},
+      {num:41,en:"Cluster sampling is used for large geographic areas.",ar:"أخذ العينات العنقودية يُستخدم للمناطق الجغرافية الكبيرة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:42,en:"Systematic sampling selects every kth element.",ar:"أخذ العينات المنتظم يختار كل عنصر k.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:43,en:"Convenience sampling is random.",ar:"أخذ العينات بالملاءمة عشوائي.",isTF:true,correct:false,explain_ar:"خطأ، يعتمد على التوفر."},
+      {num:44,en:"Nonprobability sampling can lead to bias.",ar:"أخذ العينات غير الاحتمالي يمكن أن يؤدي إلى انحياز.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:45,en:"All population members have equal chance in nonprobability sampling.",ar:"جميع أفراد المجتمع لديهم فرصة متساوية في العينات غير الاحتمالية.",isTF:true,correct:false,explain_ar:"خطأ، هذا وصف للعينات الاحتمالية."},
+      {num:46,en:"Quota sampling ensures equal representation.",ar:"أخذ العينات بالحصص يضمن تمثيلًا متساويًا.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:47,en:"Purposive sampling depends on researcher judgment.",ar:"أخذ العينات الهادفة يعتمد على حكم الباحث.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:48,en:"Sampling always increases cost.",ar:"أخذ العينات دائمًا يزيد التكلفة.",isTF:true,correct:false,explain_ar:"خطأ، يقلل التكلفة."},
+      {num:49,en:"Sampling reduces time and cost.",ar:"أخذ العينات يقلل الوقت والتكلفة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:50,en:"Nonprobability sampling allows generalization easily.",ar:"أخذ العينات غير الاحتمالي يسمح بالتعميم بسهولة.",isTF:true,correct:false,explain_ar:"خطأ، لا يسمح بالتعميم."},
+      {num:51,en:"Convenience sampling gives accurate representation.",ar:"أخذ العينات بالملاءمة يعطي تمثيلًا دقيقًا.",isTF:true,correct:false,explain_ar:"خطأ، لا يعطي تمثيلًا دقيقًا."},
+      {num:52,en:"Stratified sampling improves representation.",ar:"أخذ العينات الطبقية يحسن التمثيل.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:53,en:"Cluster sampling is useful for large populations.",ar:"أخذ العينات العنقودية مفيد للمجتمعات الكبيرة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:54,en:"Systematic sampling interval is fixed.",ar:"فاصل أخذ العينات المنتظم ثابت.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:55,en:"Sample size is always smaller than population.",ar:"حجم العينة دائمًا أصغر من المجتمع.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:56,en:"Sampling is unnecessary in research.",ar:"أخذ العينات غير ضروري في البحث.",isTF:true,correct:false,explain_ar:"خطأ، هو أساسي في البحث."},
+      {num:57,en:"Nonprobability sampling is always random.",ar:"أخذ العينات غير الاحتمالي دائمًا عشوائي.",isTF:true,correct:false,explain_ar:"خطأ، غير عشوائي."},
+      {num:58,en:"Probability sampling improves accuracy.",ar:"أخذ العينات الاحتمالي يحسن الدقة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:59,en:"Sampling has no role in research.",ar:"أخذ العينات ليس له دور في البحث.",isTF:true,correct:false,explain_ar:"خطأ، له دور أساسي."}
+    ]
+  },
+  // ==================== القسم 2: إحصاءات المستشفيات (17 MCQ + 24 TF = 41) ====================
+  {
+    name:"إحصاءات المستشفيات والسجلات الطبية",
+    nameEn:"Hospital & Medical Records",
+    questions:[
+      // MCQ (1-17)
+      {num:1,en:"Hospital statistics depend on:",ar:"إحصاءات المستشفيات تعتمد على:",options:[{en:"A. Weather",ar:"أ. الطقس",correct:false},{en:"B. Patient data",ar:"ب. بيانات المرضى",correct:true},{en:"C. Only doctors",ar:"ج. الأطباء فقط",correct:false},{en:"D. Equipment",ar:"د. المعدات",correct:false}],explain_ar:"إحصاءات المستشفيات تستند إلى بيانات المرضى."},
+      {num:2,en:"Inpatient census is taken usually at:",ar:"إحصاء المرضى الداخليين يؤخذ عادةً في:",options:[{en:"A. Morning",ar:"أ. الصباح",correct:false},{en:"B. Noon",ar:"ب. الظهر",correct:false},{en:"C. Midnight",ar:"ج. منتصف الليل",correct:true},{en:"D. Evening",ar:"د. المساء",correct:false}],explain_ar:"يؤخذ إحصاء المرضى الداخليين عند منتصف الليل."},
+      {num:3,en:"Inpatient service day refers to:",ar:"يوم خدمة المريض الداخلي يشير إلى:",options:[{en:"A. One week care",ar:"أ. رعاية أسبوع",correct:false},{en:"B. 24-hour care",ar:"ب. رعاية 24 ساعة",correct:true},{en:"C. Monthly care",ar:"ج. رعاية شهرية",correct:false},{en:"D. Hourly care",ar:"د. رعاية ساعة",correct:false}],explain_ar:"يوم خدمة المريض الداخلي هو يوم رعاية كامل (24 ساعة)."},
+      {num:4,en:"Average daily inpatient service days formula includes:",ar:"معادلة متوسط أيام خدمة المرضى الداخليين اليومية تشمل:",options:[{en:"A. Total ÷ days",ar:"أ. الإجمالي ÷ الأيام",correct:true},{en:"B. Days ÷ total",ar:"ب. الأيام ÷ الإجمالي",correct:false},{en:"C. Random",ar:"ج. عشوائي",correct:false},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"المتوسط = إجمالي أيام الخدمة ÷ عدد الأيام."},
+      {num:5,en:"Medical record contains:",ar:"السجل الطبي يحتوي على:",options:[{en:"A. Patient history",ar:"أ. تاريخ المريض",correct:true},{en:"B. Only name",ar:"ب. الاسم فقط",correct:false},{en:"C. Only age",ar:"ج. العمر فقط",correct:false},{en:"D. Only diagnosis",ar:"د. التشخيص فقط",correct:false}],explain_ar:"السجل الطبي يشمل التاريخ المرضي، التشخيص، العلاج، والملاحظات."},
+      {num:6,en:"Medical records help in:",ar:"السجلات الطبية تساعد في:",options:[{en:"A. Treatment planning",ar:"أ. تخطيط العلاج",correct:true},{en:"B. Ignoring care",ar:"ب. تجاهل الرعاية",correct:false},{en:"C. Delaying diagnosis",ar:"ج. تأخير التشخيص",correct:false},{en:"D. Errors",ar:"د. الأخطاء",correct:false}],explain_ar:"تساعد السجلات الطبية في تخطيط العلاج ومتابعة المريض."},
+      {num:7,en:"Medical records are important for:",ar:"السجلات الطبية مهمة لـ:",options:[{en:"A. Legal issues",ar:"أ. القضايا القانونية",correct:true},{en:"B. Cooking",ar:"ب. الطهي",correct:false},{en:"C. Driving",ar:"ج. القيادة",correct:false},{en:"D. Games",ar:"د. الألعاب",correct:false}],explain_ar:"السجلات الطبية تستخدم كدليل قانوني في حالات التقاضي."},
+      {num:8,en:"Epidemiology uses medical records for:",ar:"علم الوبائيات يستخدم السجلات الطبية لـ:",options:[{en:"A. Entertainment",ar:"أ. الترفيه",correct:false},{en:"B. Disease tracking",ar:"ب. تتبع الأمراض",correct:true},{en:"C. Sports",ar:"ج. الرياضة",correct:false},{en:"D. Travel",ar:"د. السفر",correct:false}],explain_ar:"تُستخدم السجلات الطبية في تتبع انتشار الأمراض وتحديد عوامل الخطر."},
+      {num:9,en:"Mortality rate is obtained from:",ar:"معدل الوفيات يُستخلص من:",options:[{en:"A. Medical records",ar:"أ. السجلات الطبية",correct:true},{en:"B. Random guess",ar:"ب. تخمين عشوائي",correct:false},{en:"C. Weather",ar:"ج. الطقس",correct:false},{en:"D. Food",ar:"د. الطعام",correct:false}],explain_ar:"تُستخدم السجلات الطبية لحساب معدلات الوفيات."},
+      {num:10,en:"Documentation ensures:",ar:"التوثيق يضمن:",options:[{en:"A. Clarity",ar:"أ. الوضوح",correct:true},{en:"B. Confusion",ar:"ب. الارتباك",correct:false},{en:"C. Errors",ar:"ج. الأخطاء",correct:false},{en:"D. Loss",ar:"د. الفقدان",correct:false}],explain_ar:"التوثيق الجيد يضمن وضوح المعلومات ودقتها."},
+      {num:11,en:"Medical records reflect:",ar:"السجلات الطبية تعكس:",options:[{en:"A. Health status",ar:"أ. الحالة الصحية",correct:true},{en:"B. Weather",ar:"ب. الطقس",correct:false},{en:"C. Economy",ar:"ج. الاقتصاد",correct:false},{en:"D. Food",ar:"د. الطعام",correct:false}],explain_ar:"السجلات الطبية تعكس الحالة الصحية للمريض."},
+      {num:12,en:"Hospital management uses records for:",ar:"إدارة المستشفى تستخدم السجلات لـ:",options:[{en:"A. Planning",ar:"أ. التخطيط",correct:true},{en:"B. Playing",ar:"ب. اللعب",correct:false},{en:"C. Cooking",ar:"ج. الطهي",correct:false},{en:"D. Ignoring",ar:"د. التجاهل",correct:false}],explain_ar:"تستخدم الإدارة السجلات للتخطيط وتخصيص الموارد."},
+      {num:13,en:"Medical records are used in education for:",ar:"السجلات الطبية تستخدم في التعليم لـ:",options:[{en:"A. Teaching",ar:"أ. التدريس",correct:true},{en:"B. Games",ar:"ب. الألعاب",correct:false},{en:"C. Travel",ar:"ج. السفر",correct:false},{en:"D. Shopping",ar:"د. التسوق",correct:false}],explain_ar:"تُستخدم الحالات السريرية في التعليم الطبي."},
+      {num:14,en:"Case fatality is measured using:",ar:"معدل الإماتة الحالة يُقاس باستخدام:",options:[{en:"A. Records",ar:"أ. السجلات",correct:true},{en:"B. Guess",ar:"ب. التخمين",correct:false},{en:"C. Random",ar:"ج. عشوائي",correct:false},{en:"D. Weather",ar:"د. الطقس",correct:false}],explain_ar:"يُحسب معدل الإماتة من السجلات الطبية."},
+      {num:15,en:"Hospital statistics help in:",ar:"إحصاءات المستشفى تساعد في:",options:[{en:"A. Decision making",ar:"أ. اتخاذ القرار",correct:true},{en:"B. Ignoring care",ar:"ب. تجاهل الرعاية",correct:false},{en:"C. Errors",ar:"ج. الأخطاء",correct:false},{en:"D. Delay",ar:"د. التأخير",correct:false}],explain_ar:"تساعد إحصاءات المستشفى في اتخاذ قرارات إدارية."},
+      {num:16,en:"Inpatient census counts:",ar:"إحصاء المرضى الداخليين يحسب:",options:[{en:"A. Outpatients",ar:"أ. مرضى العيادات الخارجية",correct:false},{en:"B. Inpatients",ar:"ب. المرضى الداخليين",correct:true},{en:"C. Doctors",ar:"ج. الأطباء",correct:false},{en:"D. Nurses",ar:"د. الممرضين",correct:false}],explain_ar:"يقيس عدد المرضى المقيمين في المستشفى."},
+      {num:17,en:"Medical records must be:",ar:"السجلات الطبية يجب أن تكون:",options:[{en:"A. Accurate",ar:"أ. دقيقة",correct:true},{en:"B. Incomplete",ar:"ب. غير مكتملة",correct:false},{en:"C. Wrong",ar:"ج. خاطئة",correct:false},{en:"D. Ignored",ar:"د. مهملة",correct:false}],explain_ar:"الدقة ضرورية في السجلات الطبية."},
+      // TF (16-30, 39-45, 48-49)
+      {num:18,en:"Hospital statistics depend on patient data.",ar:"إحصاءات المستشفيات تعتمد على بيانات المرضى.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:19,en:"Inpatient census is usually taken at midnight.",ar:"إحصاء المرضى الداخليين يُؤخذ عادةً عند منتصف الليل.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:20,en:"Inpatient service day equals one week care.",ar:"يوم خدمة المريض الداخلي يساوي رعاية أسبوع.",isTF:true,correct:false,explain_ar:"خطأ، يساوي 24 ساعة."},
+      {num:21,en:"One inpatient equals one service day per 24 hours.",ar:"مريض داخلي واحد يساوي يوم خدمة واحد لكل 24 ساعة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:22,en:"Average daily inpatient service days = total ÷ number of days.",ar:"متوسط أيام خدمة المرضى الداخليين اليومية = الإجمالي ÷ عدد الأيام.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:23,en:"Medical records include patient history.",ar:"السجلات الطبية تشمل تاريخ المريض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:24,en:"Medical records are not useful for treatment planning.",ar:"السجلات الطبية ليست مفيدة لتخطيط العلاج.",isTF:true,correct:false,explain_ar:"خطأ، مفيدة جدًا."},
+      {num:25,en:"Medical records support decision-making.",ar:"السجلات الطبية تدعم اتخاذ القرار.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:26,en:"Medical records have no legal importance.",ar:"السجلات الطبية ليس لها أهمية قانونية.",isTF:true,correct:false,explain_ar:"خطأ، لها أهمية قانونية."},
+      {num:27,en:"Medical records help in education.",ar:"السجلات الطبية تساعد في التعليم.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:28,en:"Medical records can be used in epidemiology.",ar:"السجلات الطبية يمكن استخدامها في علم الوبائيات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:29,en:"Mortality rates are obtained from medical records.",ar:"معدلات الوفيات تُستخلص من السجلات الطبية.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:30,en:"Medical records cannot measure disease incidence.",ar:"السجلات الطبية لا يمكنها قياس حدوث المرض.",isTF:true,correct:false,explain_ar:"خطأ، يمكن استخدامها."},
+      {num:31,en:"Documentation provides instructions for staff.",ar:"التوثيق يوفر تعليمات للفريق.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:32,en:"Information design is about hiding data.",ar:"تصميم المعلومات هو عن إخفاء البيانات.",isTF:true,correct:false,explain_ar:"خطأ، هو عن تقديم البيانات."},
+      {num:33,en:"Medical records reflect community health status.",ar:"السجلات الطبية تعكس الحالة الصحية للمجتمع.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:34,en:"Hospital management uses medical records.",ar:"إدارة المستشفى تستخدم السجلات الطبية.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:35,en:"Medical records help in evaluating healthcare quality.",ar:"السجلات الطبية تساعد في تقييم جودة الرعاية الصحية.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:36,en:"Medical records are useless in legal cases.",ar:"السجلات الطبية عديمة الفائدة في القضايا القانونية.",isTF:true,correct:false,explain_ar:"خطأ، مفيدة جدًا."},
+      {num:37,en:"Patient census includes only discharged patients.",ar:"إحصاء المرضى يشمل فقط المرضى المخرجين.",isTF:true,correct:false,explain_ar:"خطأ، يشمل المرضى المقيمين."},
+      {num:38,en:"Inpatient census counts patients present at a specific time.",ar:"إحصاء المرضى الداخليين يحسب المرضى الموجودين في وقت محدد.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:39,en:"Average turnover relates to bed usage.",ar:"متوسط الدوران يتعلق باستخدام الأسرة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:40,en:"Medical records are permanent documents.",ar:"السجلات الطبية وثائق دائمة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:41,en:"Information design helps present data effectively.",ar:"تصميم المعلومات يساعد في تقديم البيانات بفعالية.",isTF:true,correct:true,explain_ar:"صحيح."}
+    ]
+  },
+  // ==================== القسم 3: عرض البيانات (34 MCQ + 50 TF = 84) ====================
+  {
+    name:"عرض البيانات",
+    nameEn:"Data Presentation",
+    questions:[
+      // MCQ (1-34)
+      {num:1,en:"Data presentation is:",ar:"عرض البيانات هو:",options:[{en:"A. Collecting data",ar:"أ. جمع البيانات",correct:false},{en:"B. Organizing data visually",ar:"ب. تنظيم البيانات بصريًا",correct:true},{en:"C. Ignoring data",ar:"ج. تجاهل البيانات",correct:false},{en:"D. Deleting data",ar:"د. حذف البيانات",correct:false}],explain_ar:"عرض البيانات يعني تنظيمها في جداول ورسوم بيانية لتوضيحها."},
+      {num:2,en:"One importance of data presentation:",ar:"أهمية عرض البيانات:",options:[{en:"A. Confusion",ar:"أ. الارتباك",correct:false},{en:"B. Clarity",ar:"ب. الوضوح",correct:true},{en:"C. Complexity",ar:"ج. التعقيد",correct:false},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"عرض البيانات يجعل المعلومات واضحة وسهلة الفهم."},
+      {num:3,en:"First step in presentation:",ar:"الخطوة الأولى في العرض:",options:[{en:"A. Graph",ar:"أ. الرسم البياني",correct:false},{en:"B. Organizing data",ar:"ب. تنظيم البيانات",correct:true},{en:"C. Printing",ar:"ج. الطباعة",correct:false},{en:"D. Drawing",ar:"د. الرسم",correct:false}],explain_ar:"أول خطوة هي تنظيم البيانات قبل عرضها."},
+      {num:4,en:"Audience helps to:",ar:"الجمهور يساعد في:",options:[{en:"A. Destroy data",ar:"أ. تدمير البيانات",correct:false},{en:"B. Customize presentation",ar:"ب. تخصيص العرض",correct:true},{en:"C. Delete data",ar:"ج. حذف البيانات",correct:false},{en:"D. Ignore data",ar:"د. تجاهل البيانات",correct:false}],explain_ar:"معرفة الجمهور تساعد في تخصيص العرض."},
+      {num:5,en:"Tabulation means:",ar:"التبويب يعني:",options:[{en:"A. Writing story",ar:"أ. كتابة قصة",correct:false},{en:"B. Arranging in tables",ar:"ب. الترتيب في جداول",correct:true},{en:"C. Drawing only",ar:"ج. الرسم فقط",correct:false},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"التبويب هو تنظيم البيانات في جداول."},
+      {num:6,en:"Graphical presentation uses:",ar:"العرض البياني يستخدم:",options:[{en:"A. Words",ar:"أ. الكلمات",correct:false},{en:"B. Charts",ar:"ب. الرسوم البيانية",correct:true},{en:"C. Tables",ar:"ج. الجداول",correct:false},{en:"D. Codes",ar:"د. الرموز",correct:false}],explain_ar:"الرسوم البيانية مثل الأعمدة والدوائر."},
+      {num:7,en:"Bar chart is used for:",ar:"المخطط العمودي يُستخدم لـ:",options:[{en:"A. Time",ar:"أ. الزمن",correct:false},{en:"B. Comparison",ar:"ب. المقارنة",correct:true},{en:"C. Percentage",ar:"ج. النسبة المئوية",correct:false},{en:"D. Text",ar:"د. النص",correct:false}],explain_ar:"المخطط العمودي يقارن بين فئات مختلفة."},
+      {num:8,en:"Pie chart shows:",ar:"المخطط الدائري يظهر:",options:[{en:"A. Trend",ar:"أ. الاتجاه",correct:false},{en:"B. Percentage",ar:"ب. النسبة المئوية",correct:true},{en:"C. Time",ar:"ج. الزمن",correct:false},{en:"D. Relation",ar:"د. العلاقة",correct:false}],explain_ar:"يظهر النسب المئوية لكل جزء."},
+      {num:9,en:"Line graph shows:",ar:"الرسم البياني الخطي يظهر:",options:[{en:"A. Categories",ar:"أ. الفئات",correct:false},{en:"B. Time changes",ar:"ب. التغيرات الزمنية",correct:true},{en:"C. Names",ar:"ج. الأسماء",correct:false},{en:"D. Text",ar:"د. النص",correct:false}],explain_ar:"يُستخدم لعرض التغيرات عبر الزمن."},
+      {num:10,en:"Scatter plot shows:",ar:"مخطط التشتت يظهر:",options:[{en:"A. Text",ar:"أ. النص",correct:false},{en:"B. Relationship",ar:"ب. العلاقة",correct:true},{en:"C. Table",ar:"ج. الجدول",correct:false},{en:"D. Time",ar:"د. الزمن",correct:false}],explain_ar:"يُظهر العلاقة بين متغيرين."},
+      {num:11,en:"Histogram is used for:",ar:"المدرج التكراري يُستخدم لـ:",options:[{en:"A. Categories",ar:"أ. الفئات",correct:false},{en:"B. Continuous data",ar:"ب. البيانات المستمرة",correct:true},{en:"C. Text",ar:"ج. النص",correct:false},{en:"D. Names",ar:"د. الأسماء",correct:false}],explain_ar:"يُستخدم للبيانات المستمرة مثل الأعمار."},
+      {num:12,en:"Frequency means:",ar:"التكرار يعني:",options:[{en:"A. Size",ar:"أ. الحجم",correct:false},{en:"B. Count",ar:"ب. العدد",correct:true},{en:"C. Name",ar:"ج. الاسم",correct:false},{en:"D. Type",ar:"د. النوع",correct:false}],explain_ar:"التكرار هو عدد مرات حدوث القيمة."},
+      {num:13,en:"Range =",ar:"المدى =",options:[{en:"A. Sum",ar:"أ. المجموع",correct:false},{en:"B. Max - Min",ar:"ب. القيمة العظمى - الصغرى",correct:true},{en:"C. Average",ar:"ج. المتوسط",correct:false},{en:"D. None",ar:"د. لا شيء",correct:false}],explain_ar:"المدى = القيمة العظمى - القيمة الصغرى."},
+      {num:14,en:"Class interval means:",ar:"الفترة الطبقية تعني:",options:[{en:"A. Limit",ar:"أ. الحد",correct:false},{en:"B. Difference",ar:"ب. الفرق",correct:true},{en:"C. Sum",ar:"ج. المجموع",correct:false},{en:"D. Count",ar:"د. العدد",correct:false}],explain_ar:"الفترة الطبقية هي الفرق بين حدود الفئة."},
+      {num:15,en:"Tally marks are used for:",ar:"علامات التعداد تُستخدم لـ:",options:[{en:"A. Graph",ar:"أ. الرسم البياني",correct:false},{en:"B. Counting",ar:"ب. العد",correct:true},{en:"C. Writing",ar:"ج. الكتابة",correct:false},{en:"D. Drawing",ar:"د. الرسم",correct:false}],explain_ar:"تُستخدم لتسجيل التكرارات."},
+      {num:16,en:"Identifying the audience helps to:",ar:"تحديد الجمهور يساعد في:",options:[{en:"A. Ignore data",ar:"أ. تجاهل البيانات",correct:false},{en:"B. Customize presentation",ar:"ب. تخصيص العرض",correct:true},{en:"C. Delete data",ar:"ج. حذف البيانات",correct:false},{en:"D. Simplify nothing",ar:"د. لا يبسط شيئًا",correct:false}],explain_ar:"يساعد في تخصيص العرض بما يناسب الجمهور."},
+      {num:17,en:"Pie chart is used for:",ar:"المخطط الدائري يُستخدم لـ:",options:[{en:"A. Trends",ar:"أ. الاتجاهات",correct:false},{en:"B. Proportions",ar:"ب. النسب",correct:true},{en:"C. Time",ar:"ج. الزمن",correct:false},{en:"D. Relationships",ar:"د. العلاقات",correct:false}],explain_ar:"يُظهر النسب المئوية."},
+      {num:18,en:"Line graph shows:",ar:"الرسم البياني الخطي يظهر:",options:[{en:"A. Categories",ar:"أ. الفئات",correct:false},{en:"B. Trends over time",ar:"ب. الاتجاهات عبر الزمن",correct:true},{en:"C. Names",ar:"ج. الأسماء",correct:false},{en:"D. Frequencies",ar:"د. التكرارات",correct:false}],explain_ar:"يُظهر التغيرات الزمنية."},
+      {num:19,en:"Scatter plot shows:",ar:"مخطط التشتت يظهر:",options:[{en:"A. Text",ar:"أ. النص",correct:false},{en:"B. Relationship between variables",ar:"ب. العلاقة بين المتغيرات",correct:true},{en:"C. Tables",ar:"ج. الجداول",correct:false},{en:"D. Categories",ar:"د. الفئات",correct:false}],explain_ar:"يُظهر العلاقة بين متغيرين."},
+      {num:20,en:"Histogram is used for:",ar:"المدرج التكراري يُستخدم لـ:",options:[{en:"A. Categories",ar:"أ. الفئات",correct:false},{en:"B. Continuous data",ar:"ب. البيانات المستمرة",correct:true},{en:"C. Text",ar:"ج. النص",correct:false},{en:"D. Names",ar:"د. الأسماء",correct:false}],explain_ar:"يُستخدم للبيانات المستمرة."},
+      {num:21,en:"Frequency means:",ar:"التكرار يعني:",options:[{en:"A. Size",ar:"أ. الحجم",correct:false},{en:"B. Count",ar:"ب. العدد",correct:true},{en:"C. Shape",ar:"ج. الشكل",correct:false},{en:"D. Label",ar:"د. التسمية",correct:false}],explain_ar:"التكرار هو العدد."},
+      {num:22,en:"Range equals:",ar:"المدى يساوي:",options:[{en:"A. Sum",ar:"أ. المجموع",correct:false},{en:"B. Maximum − Minimum",ar:"ب. القيمة العظمى - الصغرى",correct:true},{en:"C. Average",ar:"ج. المتوسط",correct:false},{en:"D. Count",ar:"د. العدد",correct:false}],explain_ar:"المدى = العظمى - الصغرى."},
+      {num:23,en:"Class interval is:",ar:"الفترة الطبقية هي:",options:[{en:"A. Label",ar:"أ. التسمية",correct:false},{en:"B. Difference between limits",ar:"ب. الفرق بين الحدود",correct:true},{en:"C. Sum",ar:"ج. المجموع",correct:false},{en:"D. Value",ar:"د. القيمة",correct:false}],explain_ar:"الفرق بين الحد الأعلى والأدنى للفئة."},
+      {num:24,en:"Tally marks are used for:",ar:"علامات التعداد تُستخدم لـ:",options:[{en:"A. Drawing",ar:"أ. الرسم",correct:false},{en:"B. Counting",ar:"ب. العد",correct:true},{en:"C. Writing",ar:"ج. الكتابة",correct:false},{en:"D. Labeling",ar:"د. التسمية",correct:false}],explain_ar:"تُستخدم للعد."},
+      {num:25,en:"Textual presentation uses:",ar:"العرض النصي يستخدم:",options:[{en:"A. Graphs",ar:"أ. الرسوم البيانية",correct:false},{en:"B. Words",ar:"ب. الكلمات",correct:true},{en:"C. Tables",ar:"ج. الجداول",correct:false},{en:"D. Numbers only",ar:"د. الأرقام فقط",correct:false}],explain_ar:"يعتمد على النصوص."},
+      {num:26,en:"Tabular presentation organizes data into:",ar:"العرض الجدولي ينظم البيانات في:",options:[{en:"A. Paragraphs",ar:"أ. فقرات",correct:false},{en:"B. Rows and columns",ar:"ب. صفوف وأعمدة",correct:true},{en:"C. Charts",ar:"ج. رسوم بيانية",correct:false},{en:"D. Lines",ar:"د. خطوط",correct:false}],explain_ar:"ينظم البيانات في جداول."},
+      {num:27,en:"Graphical presentation highlights:",ar:"العرض البياني يبرز:",options:[{en:"A. Text",ar:"أ. النص",correct:false},{en:"B. Patterns",ar:"ب. الأنماط",correct:true},{en:"C. Words",ar:"ج. الكلمات",correct:false},{en:"D. Letters",ar:"د. الحروف",correct:false}],explain_ar:"يساعد في رؤية الأنماط."},
+      {num:28,en:"Bar chart compares:",ar:"المخطط العمودي يقارن:",options:[{en:"A. Time",ar:"أ. الزمن",correct:false},{en:"B. Categories",ar:"ب. الفئات",correct:true},{en:"C. Percentages",ar:"ج. النسب المئوية",correct:false},{en:"D. Words",ar:"د. الكلمات",correct:false}],explain_ar:"يقارن بين فئات."},
+      {num:29,en:"Pie chart represents:",ar:"المخطط الدائري يمثل:",options:[{en:"A. Trends",ar:"أ. الاتجاهات",correct:false},{en:"B. Percentages",ar:"ب. النسب المئوية",correct:true},{en:"C. Frequency only",ar:"ج. التكرار فقط",correct:false},{en:"D. Text",ar:"د. النص",correct:false}],explain_ar:"يمثل النسب المئوية."},
+      {num:30,en:"Line graph is best for:",ar:"الرسم البياني الخطي الأفضل لـ:",options:[{en:"A. Categories",ar:"أ. الفئات",correct:false},{en:"B. Time changes",ar:"ب. التغيرات الزمنية",correct:true},{en:"C. Names",ar:"ج. الأسماء",correct:false},{en:"D. Tables",ar:"د. الجداول",correct:false}],explain_ar:"يُظهر التغيرات عبر الزمن."},
+      {num:31,en:"Scatter plot is useful for:",ar:"مخطط التشتت مفيد لـ:",options:[{en:"A. Time",ar:"أ. الزمن",correct:false},{en:"B. Correlation",ar:"ب. الارتباط",correct:true},{en:"C. Percentages",ar:"ج. النسب المئوية",correct:false},{en:"D. Labels",ar:"د. التسميات",correct:false}],explain_ar:"يُظهر الارتباط بين متغيرين."},
+      {num:32,en:"Histogram groups data into:",ar:"المدرج التكراري يجمع البيانات في:",options:[{en:"A. Names",ar:"أ. الأسماء",correct:false},{en:"B. Intervals",ar:"ب. فترات",correct:true},{en:"C. Labels",ar:"ج. تسميات",correct:false},{en:"D. Tables",ar:"د. جداول",correct:false}],explain_ar:"يجمع البيانات في فترات."},
+      {num:33,en:"Class limits are:",ar:"حدود الفئات هي:",options:[{en:"A. Frequencies",ar:"أ. التكرارات",correct:false},{en:"B. Boundaries",ar:"ب. الحدود",correct:true},{en:"C. Labels",ar:"ج. التسميات",correct:false},{en:"D. Names",ar:"د. الأسماء",correct:false}],explain_ar:"حدود الفئات تحدد نطاق كل فئة."},
+      {num:34,en:"Frequency table shows:",ar:"جدول التكرار يظهر:",options:[{en:"A. Colors",ar:"أ. الألوان",correct:false},{en:"B. Counts",ar:"ب. التكرارات (الأعداد)",correct:true},{en:"C. Names",ar:"ج. الأسماء",correct:false},{en:"D. Words",ar:"د. الكلمات",correct:false}],explain_ar:"يُظهر عدد مرات حدوث القيم."},
+      // TF (1-50)
+      {num:35,en:"Data presentation transforms raw data into understandable form.",ar:"عرض البيانات يحول البيانات الخام إلى شكل مفهوم.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:36,en:"Data presentation does not help decision-making.",ar:"عرض البيانات لا يساعد في اتخاذ القرار.",isTF:true,correct:false,explain_ar:"خطأ، يساعد في اتخاذ القرار."},
+      {num:37,en:"Visuals improve audience engagement.",ar:"المرئيات تحسن تفاعل الجمهور.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:38,en:"Textual presentation uses only numbers.",ar:"العرض النصي يستخدم الأرقام فقط.",isTF:true,correct:false,explain_ar:"خطأ، يستخدم النصوص."},
+      {num:39,en:"Organizing data is a step in data presentation.",ar:"تنظيم البيانات خطوة في عرض البيانات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:40,en:"Audience identification is not important.",ar:"تحديد الجمهور ليس مهمًا.",isTF:true,correct:false,explain_ar:"خطأ، مهم لتخصيص العرض."},
+      {num:41,en:"Tables organize data in rows and columns.",ar:"الجداول تنظم البيانات في صفوف وأعمدة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:42,en:"Graphs cannot show relationships.",ar:"الرسوم البيانية لا يمكنها إظهار العلاقات.",isTF:true,correct:false,explain_ar:"خطأ، مثل مخطط التشتت يُظهر العلاقة."},
+      {num:43,en:"Bar charts compare categories.",ar:"المخططات العمودية تقارن الفئات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:44,en:"Pie charts show absolute values only.",ar:"المخططات الدائرية تظهر القيم المطلقة فقط.",isTF:true,correct:false,explain_ar:"خطأ، تظهر النسب المئوية."},
+      {num:45,en:"Line graphs show trends over time.",ar:"الرسوم الخطية تظهر الاتجاهات عبر الزمن.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:46,en:"Scatter plots show relationships between variables.",ar:"مخططات التشتت تظهر العلاقة بين المتغيرات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:47,en:"Histograms are only for small data.",ar:"المدرجات التكرارية فقط للبيانات الصغيرة.",isTF:true,correct:false,explain_ar:"خطأ، تُستخدم لأي حجم."},
+      {num:48,en:"Frequency means number of occurrences.",ar:"التكرار يعني عدد مرات الحدوث.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:49,en:"Tally marks are used in frequency tables.",ar:"علامات التعداد تُستخدم في جداول التكرار.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:50,en:"Labels are not necessary in tables.",ar:"التسميات ليست ضرورية في الجداول.",isTF:true,correct:false,explain_ar:"خطأ، التسميات ضرورية."},
+      {num:51,en:"Visual data is easier to understand than raw data.",ar:"البيانات المرئية أسهل للفهم من البيانات الخام.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:52,en:"Bar charts show time trends.",ar:"المخططات العمودية تظهر الاتجاهات الزمنية.",isTF:true,correct:false,explain_ar:"خطأ، تُستخدم للمقارنة بين الفئات."},
+      {num:53,en:"Pie charts represent proportions.",ar:"المخططات الدائرية تمثل النسب.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:54,en:"Scatter plots do not show correlation.",ar:"مخططات التشتت لا تظهر الارتباط.",isTF:true,correct:false,explain_ar:"خطأ، تُظهر الارتباط."},
+      {num:55,en:"Frequency distribution organizes data into classes.",ar:"توزيع التكرار ينظم البيانات في فئات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:56,en:"Class intervals must always be unequal.",ar:"فترات الفئات يجب أن تكون غير متساوية دائمًا.",isTF:true,correct:false,explain_ar:"خطأ، يُفضل أن تكون متساوية."},
+      {num:57,en:"Class interval = upper limit − lower limit.",ar:"الفترة الطبقية = الحد الأعلى - الحد الأدنى.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:58,en:"Range = maximum − minimum.",ar:"المدى = القيمة العظمى - الصغرى.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:59,en:"Data can be presented without analysis.",ar:"يمكن عرض البيانات دون تحليل.",isTF:true,correct:false,explain_ar:"خطأ، التحليل يساعد في العرض."},
+      {num:60,en:"Determining range is a first step.",ar:"تحديد المدى خطوة أولى.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:61,en:"Histograms use continuous bars.",ar:"المدرجات التكرارية تستخدم أعمدة متصلة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:62,en:"Continuous data does not need grouping.",ar:"البيانات المستمرة لا تحتاج إلى تجميع.",isTF:true,correct:false,explain_ar:"خطأ، تحتاج إلى تجميع في فترات."},
+      {num:63,en:"Number of classes depends on data size.",ar:"عدد الفئات يعتمد على حجم البيانات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:64,en:"Labeling is unnecessary.",ar:"التسمية غير ضرورية.",isTF:true,correct:false,explain_ar:"خطأ، ضرورية للتوضيح."},
+      {num:65,en:"Textual presentation uses words.",ar:"العرض النصي يستخدم الكلمات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:66,en:"Tabulation does not help comparison.",ar:"التبويب لا يساعد في المقارنة.",isTF:true,correct:false,explain_ar:"خطأ، يساعد في المقارنة."},
+      {num:67,en:"Graphical presentation uses charts.",ar:"العرض البياني يستخدم الرسوم البيانية.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:68,en:"Bar graphs use bars for comparison.",ar:"المخططات العمودية تستخدم أعمدة للمقارنة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:69,en:"Pie charts divide data into sectors.",ar:"المخططات الدائرية تقسم البيانات إلى قطاعات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:70,en:"Each part of a pie chart is called a sector.",ar:"كل جزء من المخطط الدائري يُسمى قطاعًا.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:71,en:"Scatter plots use only lines.",ar:"مخططات التشتت تستخدم الخطوط فقط.",isTF:true,correct:false,explain_ar:"خطأ، تستخدم نقاطًا."},
+      {num:72,en:"Data should be analyzed before presentation.",ar:"يجب تحليل البيانات قبل العرض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:73,en:"Data presentation improves clarity.",ar:"عرض البيانات يحسن الوضوح.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:74,en:"Raw data is easy to understand.",ar:"البيانات الخام سهلة الفهم.",isTF:true,correct:false,explain_ar:"خطأ، تحتاج إلى تنظيم."},
+      {num:75,en:"Frequency tables simplify data.",ar:"جداول التكرار تبسط البيانات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:76,en:"Histograms represent grouped data.",ar:"المدرجات التكرارية تمثل البيانات المجمعة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:77,en:"Class limits define class boundaries.",ar:"حدود الفئات تحدد حدود الفئة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:78,en:"Audience can be ignored.",ar:"يمكن تجاهل الجمهور.",isTF:true,correct:false,explain_ar:"خطأ، مهم لنجاح العرض."},
+      {num:79,en:"Good presentation improves understanding.",ar:"العرض الجيد يحسن الفهم.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:80,en:"Graphs cannot show patterns.",ar:"الرسوم البيانية لا يمكنها إظهار الأنماط.",isTF:true,correct:false,explain_ar:"خطأ، تُظهر الأنماط."},
+      {num:81,en:"Data must be organized before presentation.",ar:"يجب تنظيم البيانات قبل العرض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:82,en:"All charts have the same purpose.",ar:"جميع المخططات لها نفس الغرض.",isTF:true,correct:false,explain_ar:"خطأ، لكل مخطط غرض مختلف."},
+      {num:83,en:"Pie charts do not show percentages.",ar:"المخططات الدائرية لا تظهر النسب المئوية.",isTF:true,correct:false,explain_ar:"خطأ، تظهر النسب المئوية."},
+      {num:84,en:"Bar charts compare data categories.",ar:"المخططات العمودية تقارن فئات البيانات.",isTF:true,correct:true,explain_ar:"صحيح."}
+    ]
+  },
+  // ==================== القسم 4: الإحصاءات الحيوية (25 MCQ + 20 TF = 45) ====================
+  {
+    name:"الإحصاءات الحيوية",
+    nameEn:"Vital Statistics",
+    questions:[
+      // MCQ (1-25)
+      {num:1,en:"Vital statistics mainly provide information about:",ar:"الإحصاءات الحيوية تقدم معلومات أساسية عن:",options:[{en:"A. Weather conditions",ar:"أ. أحوال الطقس",correct:false},{en:"B. Population life events",ar:"ب. أحداث الحياة السكانية",correct:true},{en:"C. Industrial production",ar:"ج. الإنتاج الصناعي",correct:false},{en:"D. Agricultural activities",ar:"د. الأنشطة الزراعية",correct:false}],explain_ar:"الإحصاءات الحيوية تغطي المواليد، الوفيات، الزواج، والطلاق."},
+      {num:2,en:"Which of the following is NOT considered a vital event?",ar:"أي من التالي لا يُعتبر حدثًا حيويًا؟",options:[{en:"A. Birth",ar:"أ. الولادة",correct:false},{en:"B. Death",ar:"ب. الوفاة",correct:false},{en:"C. Marriage",ar:"ج. الزواج",correct:false},{en:"D. Employment",ar:"د. التوظيف",correct:true}],explain_ar:"التوظيف ليس حدثًا حيويًا."},
+      {num:3,en:"Vital statistics are primarily used to:",ar:"الإحصاءات الحيوية تُستخدم أساسًا لـ:",options:[{en:"A. Predict stock market prices",ar:"أ. التنبؤ بأسعار الأسهم",correct:false},{en:"B. Assess population health",ar:"ب. تقييم صحة السكان",correct:true},{en:"C. Measure educational achievement",ar:"ج. قياس التحصيل التعليمي",correct:false},{en:"D. Evaluate transportation systems",ar:"د. تقييم أنظمة النقل",correct:false}],explain_ar:"تُستخدم لتقييم الصحة العامة للسكان."},
+      {num:4,en:"Which population group is considered especially vulnerable in public health studies?",ar:"أي فئة سكانية تعتبر ضعيفة بشكل خاص في دراسات الصحة العامة؟",options:[{en:"A. Healthy adults only",ar:"أ. البالغون الأصحاء فقط",correct:false},{en:"B. School teachers",ar:"ب. معلمو المدارس",correct:false},{en:"C. Infants and pregnant women",ar:"ج. الرضع والحوامل",correct:true},{en:"D. Office workers",ar:"د. موظفو المكاتب",correct:false}],explain_ar:"الرضع والحوامل أكثر عرضة للمخاطر الصحية."},
+      {num:5,en:"Which factor is considered a social determinant of health?",ar:"أي عامل يُعتبر محددًا اجتماعيًا للصحة؟",options:[{en:"A. Climate only",ar:"أ. المناخ فقط",correct:false},{en:"B. Education",ar:"ب. التعليم",correct:true},{en:"C. Eye color",ar:"ج. لون العين",correct:false},{en:"D. Blood type",ar:"د. فصيلة الدم",correct:false}],explain_ar:"التعليم، الدخل، والسكن هي محددات اجتماعية للصحة."},
+      {num:6,en:"The crude birth rate is calculated using:",ar:"معدل المواليد الخام يُحسب باستخدام:",options:[{en:"A. Total population",ar:"أ. إجمالي السكان",correct:true},{en:"B. Women aged 15--49 years only",ar:"ب. النساء 15-49 سنة فقط",correct:false},{en:"C. Children under five years",ar:"ج. الأطفال دون 5 سنوات",correct:false},{en:"D. Married women only",ar:"د. المتزوجات فقط",correct:false}],explain_ar:"المعدل الخام = (المواليد الأحياء ÷ إجمالي السكان) × 1000."},
+      {num:7,en:"The General Fertility Rate (GFR) uses which denominator?",ar:"معدل الخصوبة العام يستخدم أي مقام؟",options:[{en:"A. Total population",ar:"أ. إجمالي السكان",correct:false},{en:"B. Women aged 15--49 years",ar:"ب. النساء 15-49 سنة",correct:true},{en:"C. Total number of families",ar:"ج. عدد الأسر",correct:false},{en:"D. Married couples",ar:"د. الأزواج",correct:false}],explain_ar:"GFR = (المواليد ÷ عدد النساء 15-49) × 1000."},
+      {num:8,en:"The formula for the crude birth rate is:",ar:"معادلة معدل المواليد الخام هي:",options:[{en:"A. (Live births ÷ Total population) × 100",ar:"أ. (مواليد أحياء ÷ إجمالي السكان) × 100",correct:false},{en:"B. (Live births ÷ Mid-year population) × 1,000",ar:"ب. (مواليد أحياء ÷ منتصف العام السكان) × 1000",correct:true},{en:"C. (Deaths ÷ Population) × 1,000",ar:"ج. (وفيات ÷ السكان) × 1000",correct:false},{en:"D. (Births ÷ Women aged 15--49) × 100",ar:"د. (مواليد ÷ نساء 15-49) × 100",correct:false}],explain_ar:"CBR = (عدد المواليد الأحياء في السنة ÷ منتصف العام السكان) × 1000."},
+      {num:9,en:"Which factor commonly contributes to high birth rates in developing countries?",ar:"أي عامل يساهم عادة في ارتفاع معدلات المواليد في الدول النامية؟",options:[{en:"A. Delayed marriage",ar:"أ. تأخر الزواج",correct:false},{en:"B. Extensive family planning",ar:"ب. تنظيم الأسرة المكثف",correct:false},{en:"C. Early marriage",ar:"ج. الزواج المبكر",correct:true},{en:"D. Small family preference",ar:"د. تفضيل الأسرة الصغيرة",correct:false}],explain_ar:"الزواج المبكر يزيد من فترة الإنجاب."},
+      {num:10,en:"Fertility rate differs from birth rate because it measures births among:",ar:"معدل الخصوبة يختلف عن معدل المواليد لأنه يقيس المواليد بين:",options:[{en:"A. Total population",ar:"أ. إجمالي السكان",correct:false},{en:"B. Infants",ar:"ب. الرضع",correct:false},{en:"C. Women of reproductive age",ar:"ج. النساء في سن الإنجاب",correct:true},{en:"D. Elderly people",ar:"د. كبار السن",correct:false}],explain_ar:"معدل الخصوبة يركز على النساء في سن الإنجاب."},
+      {num:11,en:"A ratio compares:",ar:"النسبة (Ratio) تقارن:",options:[{en:"A. Part to whole",ar:"أ. الجزء بالكل",correct:false},{en:"B. Two separate quantities",ar:"ب. كميتين منفصلتين",correct:true},{en:"C. Events over time only",ar:"ج. الأحداث عبر الزمن فقط",correct:false},{en:"D. Deaths to births",ar:"د. الوفيات بالمواليد",correct:false}],explain_ar:"النسبة تقارن بين كميتين مستقلتين."},
+      {num:12,en:"A proportion compares:",ar:"التناسب (Proportion) يقارن:",options:[{en:"A. Two unrelated groups",ar:"أ. مجموعتين غير مرتبطتين",correct:false},{en:"B. Part to the whole",ar:"ب. الجزء بالكل",correct:true},{en:"C. Births to deaths",ar:"ج. المواليد بالوفيات",correct:false},{en:"D. Time to population",ar:"د. الزمن بالسكان",correct:false}],explain_ar:"التناسب هو جزء من الكل."},
+      {num:13,en:"A rate differs from a ratio because it includes:",ar:"المعدل يختلف عن النسبة لأنه يشمل:",options:[{en:"A. Gender",ar:"أ. الجنس",correct:false},{en:"B. Time",ar:"ب. الزمن",correct:true},{en:"C. Income",ar:"ج. الدخل",correct:false},{en:"D. Age only",ar:"د. العمر فقط",correct:false}],explain_ar:"المعدل يشمل عامل الزمن (مثل معدل سنوي)."},
+      {num:14,en:"Population at risk refers to:",ar:"السكان المعرضون للخطر يشير إلى:",options:[{en:"A. Everyone in the country",ar:"أ. كل فرد في البلد",correct:false},{en:"B. Only people who can develop the disease",ar:"ب. فقط الأشخاص القابلين للإصابة بالمرض",correct:true},{en:"C. Hospital patients only",ar:"ج. مرضى المستشفيات فقط",correct:false},{en:"D. Children only",ar:"د. الأطفال فقط",correct:false}],explain_ar:"السكان المعرضون هم من يمكن أن يصابوا بالمرض."},
+      {num:15,en:"Prevalence measures:",ar:"الانتشار (Prevalence) يقيس:",options:[{en:"A. New cases only",ar:"أ. الحالات الجديدة فقط",correct:false},{en:"B. Existing cases at a given time",ar:"ب. الحالات الموجودة في وقت معين",correct:true},{en:"C. Deaths only",ar:"ج. الوفيات فقط",correct:false},{en:"D. Births only",ar:"د. المواليد فقط",correct:false}],explain_ar:"الانتشار هو عدد الحالات الكلي في وقت محدد."},
+      {num:16,en:"Incidence measures:",ar:"الحدوث (Incidence) يقيس:",options:[{en:"A. Existing cases",ar:"أ. الحالات الموجودة",correct:false},{en:"B. New cases during a specified period",ar:"ب. الحالات الجديدة خلال فترة محددة",correct:true},{en:"C. Death rates",ar:"ج. معدلات الوفيات",correct:false},{en:"D. Recovery rates",ar:"د. معدلات الشفاء",correct:false}],explain_ar:"الحدوث هو عدد الحالات الجديدة خلال فترة زمنية."},
+      {num:17,en:"Which factor increases prevalence?",ar:"أي عامل يزيد الانتشار؟",options:[{en:"A. Rapid recovery",ar:"أ. الشفاء السريع",correct:false},{en:"B. High cure rate",ar:"ب. ارتفاع معدل الشفاء",correct:false},{en:"C. Longer disease duration",ar:"ج. طول مدة المرض",correct:true},{en:"D. Effective prevention",ar:"د. الوقاية الفعالة",correct:false}],explain_ar:"طول مدة المرض يزيد من عدد الحالات الموجودة."},
+      {num:18,en:"Vaccination mainly reduces:",ar:"التطعيم يقلل بشكل أساسي:",options:[{en:"A. Prevalence only",ar:"أ. الانتشار فقط",correct:false},{en:"B. Incidence",ar:"ب. الحدوث",correct:true},{en:"C. Fertility",ar:"ج. الخصوبة",correct:false},{en:"D. Birth rate",ar:"د. معدل المواليد",correct:false}],explain_ar:"التطعيم يقلل من الحالات الجديدة (الحدوث)."},
+      {num:19,en:"Deaths are classified internationally using:",ar:"تُصنف الوفيات دوليًا باستخدام:",options:[{en:"A. UNICEF",ar:"أ. اليونيسيف",correct:false},{en:"B. ICD",ar:"ب. التصنيف الدولي للأمراض (ICD)",correct:true},{en:"C. GFR",ar:"ج. معدل الخصوبة العام",correct:false},{en:"D. WHO Growth Standards",ar:"د. معايير النمو لمنظمة الصحة",correct:false}],explain_ar:"ICD هو التصنيف الدولي للأمراض."},
+      {num:20,en:"ICD stands for:",ar:"ICD تعني:",options:[{en:"A. International Clinical Database",ar:"أ. قاعدة البيانات السريرية الدولية",correct:false},{en:"B. International Classification of Diseases",ar:"ب. التصنيف الدولي للأمراض",correct:true},{en:"C. International Community Diagnosis",ar:"ج. التشخيص المجتمعي الدولي",correct:false},{en:"D. International Census Department",ar:"د. دائرة الإحصاء الدولية",correct:false}],explain_ar:"ICD = International Classification of Diseases."},
+      {num:21,en:"The crude death rate measures:",ar:"معدل الوفيات الخام يقيس:",options:[{en:"A. Deaths from one disease",ar:"أ. الوفيات من مرض واحد",correct:false},{en:"B. All deaths in a population",ar:"ب. جميع الوفيات في السكان",correct:true},{en:"C. Infant deaths only",ar:"ج. وفيات الرضع فقط",correct:false},{en:"D. Maternal deaths only",ar:"د. وفيات الأمهات فقط",correct:false}],explain_ar:"CDR = (جميع الوفيات ÷ السكان) × 1000."},
+      {num:22,en:"Case-fatality rate measures:",ar:"معدل الإماتة الحالة يقيس:",options:[{en:"A. Risk of becoming ill",ar:"أ. خطر الإصابة",correct:false},{en:"B. Severity of a disease",ar:"ب. شدة المرض",correct:true},{en:"C. Birth frequency",ar:"ج. تكرار المواليد",correct:false},{en:"D. Population growth",ar:"د. النمو السكاني",correct:false}],explain_ar:"يقيس شدة المرض من خلال نسبة الوفيات بين المصابين."},
+      {num:23,en:"Cause-specific mortality rate measures:",ar:"معدل الوفيات النوعي لسبب معين يقيس:",options:[{en:"A. Deaths from one particular cause",ar:"أ. الوفيات من سبب معين",correct:true},{en:"B. Total deaths",ar:"ب. إجمالي الوفيات",correct:false},{en:"C. Infant births",ar:"ج. مواليد الرضع",correct:false},{en:"D. Fertility",ar:"د. الخصوبة",correct:false}],explain_ar:"يقيس الوفيات الناتجة عن مرض أو سبب محدد."},
+      {num:24,en:"Which of the following contributed to declining tuberculosis mortality in Egypt?",ar:"أي من التالي ساهم في انخفاض وفيات السل في مصر؟",options:[{en:"A. Reduced sanitation",ar:"أ. انخفاض الصرف الصحي",correct:false},{en:"B. Improved diagnosis and treatment",ar:"ب. تحسين التشخيص والعلاج",correct:true},{en:"C. Increased smoking",ar:"ج. زيادة التدخين",correct:false},{en:"D. Reduced vaccination",ar:"د. انخفاض التطعيم",correct:false}],explain_ar:"تحسين التشخيص والعلاج خفض الوفيات."},
+      {num:25,en:"Which of the following contributes to declining death rates?",ar:"أي من التالي يساهم في انخفاض معدلات الوفيات؟",options:[{en:"A. Poor nutrition",ar:"أ. سوء التغذية",correct:false},{en:"B. Unsafe water",ar:"ب. المياه غير الآمنة",correct:false},{en:"C. Vaccination programs",ar:"ج. برامج التطعيم",correct:true},{en:"D. Environmental pollution",ar:"د. التلوث البيئي",correct:false}],explain_ar:"التطعيم يقلل من الأمراض القاتلة."},
+      // TF (1-20)
+      {num:26,en:"Vital statistics include information about births and deaths.",ar:"تشمل الإحصاءات الحيوية معلومات عن المواليد والوفيات.",isTF:true,correct:true,explain_ar:"صحيح، هذا هو جوهر الإحصاءات الحيوية."},
+      {num:27,en:"Vital statistics help evaluate health services.",ar:"الإحصاءات الحيوية تساعد في تقييم الخدمات الصحية.",isTF:true,correct:true,explain_ar:"صحيح، تُستخدم في تقييم فعالية الخدمات الصحية."},
+      {num:28,en:"Birth rate and fertility rate are calculated using the same denominator.",ar:"معدل المواليد ومعدل الخصوبة يُحسبان باستخدام نفس المقام.",isTF:true,correct:false,explain_ar:"خطأ، معدل المواليد يستخدم إجمالي السكان، بينما الخصوبة تستخدم النساء 15-49."},
+      {num:29,en:"The fertility rate includes only women aged 15--49 years.",ar:"معدل الخصوبة يشمل فقط النساء 15-49 سنة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:30,en:"Early marriage may contribute to high birth rates.",ar:"الزواج المبكر قد يساهم في ارتفاع معدلات المواليد.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:31,en:"A ratio compares a part with the whole.",ar:"النسبة تقارن جزءًا بالكل.",isTF:true,correct:false,explain_ar:"خطأ، النسبة تقارن كميتين منفصلتين."},
+      {num:32,en:"A proportion compares a part with the whole.",ar:"التناسب يقارن جزءًا بالكل.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:33,en:"Rates always include a time component.",ar:"المعدلات تتضمن دائمًا عنصر الزمن.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:34,en:"Population at risk includes only individuals who can develop the disease.",ar:"السكان المعرضون للخطر يشملون فقط الأفراد القابلين للإصابة بالمرض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:35,en:"Prevalence measures new cases only.",ar:"الانتشار يقيس الحالات الجديدة فقط.",isTF:true,correct:false,explain_ar:"خطأ، الانتشار يقيس الحالات الموجودة."},
+      {num:36,en:"Incidence measures newly occurring cases.",ar:"الحدوث يقيس الحالات الجديدة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:37,en:"Longer disease duration increases prevalence.",ar:"طول مدة المرض يزيد الانتشار.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:38,en:"Effective vaccination can reduce disease incidence.",ar:"التطعيم الفعال يمكن أن يقلل حدوث المرض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:39,en:"ICD is used to classify causes of death.",ar:"ICD يُستخدم لتصنيف أسباب الوفاة.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:40,en:"Crude death rate includes deaths from all causes.",ar:"معدل الوفيات الخام يشمل الوفيات من جميع الأسباب.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:41,en:"Case-fatality rate measures disease severity.",ar:"معدل الإماتة الحالة يقيس شدة المرض.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:42,en:"Cause-specific mortality rate measures deaths from a particular disease.",ar:"معدل الوفيات النوعي لسبب معين يقيس الوفيات من مرض معين.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:43,en:"Improved sanitation contributes to lower mortality.",ar:"تحسين الصرف الصحي يساهم في خفض الوفيات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:44,en:"Better nutrition can reduce death rates.",ar:"التغذية الأفضل يمكن أن تخفض معدلات الوفيات.",isTF:true,correct:true,explain_ar:"صحيح."},
+      {num:45,en:"Vital statistics have no role in public health planning.",ar:"الإحصاءات الحيوية ليس لها دور في تخطيط الصحة العامة.",isTF:true,correct:false,explain_ar:"خطأ، لها دور أساسي في التخطيط الصحي."}
+    ]
+  },
+  // ==================== القسم 5: Midterm (5 MCQ + 10 TF = 15) ====================
+  {
+    name:"Midterm",
+    nameEn:"Midterm Exam",
+    questions:[
+      // MCQ (5)
+      {num:1,en:"Statistics is defined as:",ar:"تعريف الإحصاء هو:",options:[{en:"A. Study of diseases",ar:"أ. دراسة الأمراض",correct:false},{en:"B. Study of drugs",ar:"ب. دراسة الأدوية",correct:false},{en:"C. Genetics",ar:"ج. علم الوراثة",correct:false},{en:"D. Collecting, analyzing, and interpreting data",ar:"د. جمع البيانات وتحليلها وتفسيرها",correct:true}],explain_ar:"الإحصاء هو علم جمع البيانات وتحليلها وتفسيرها."},
+      {num:2,en:"Survey is used to:",ar:"الاستبيان يُستخدم لـ:",options:[{en:"A. Destroy data",ar:"أ. تدمير البيانات",correct:false},{en:"B. Collect information from group",ar:"ب. جمع معلومات من مجموعة",correct:true},{en:"C. Analyze data only",ar:"ج. تحليل البيانات فقط",correct:false},{en:"D. Predict outcomes",ar:"د. التنبؤ بالنتائج",correct:false}],explain_ar:"الاستبيان أداة لجمع البيانات من عينة."},
+      {num:3,en:"SPSS is:",ar:"SPSS هي:",options:[{en:"A. Statistical software",ar:"أ. برنامج إحصائي",correct:true},{en:"B. A medical device",ar:"ب. جهاز طبي",correct:false},{en:"C. A type of data",ar:"ج. نوع من البيانات",correct:false},{en:"D. An experiment",ar:"د. تجربة",correct:false}],explain_ar:"SPSS هو برنامج إحصائي شهير لتحليل البيانات."},
+      {num:4,en:"Advantage of primary data:",ar:"ميزة البيانات الأولية:",options:[{en:"A. Low accuracy",ar:"أ. دقة منخفضة",correct:false},{en:"B. Irrelevant",ar:"ب. غير ذات صلة",correct:false},{en:"C. High accuracy",ar:"ج. دقة عالية",correct:true},{en:"D. Outdated",ar:"د. قديمة",correct:false}],explain_ar:"البيانات الأولية يتم جمعها مباشرة من المصدر، لذا تكون أكثر دقة."},
+      {num:5,en:"Secondary data is:",ar:"البيانات الثانوية هي:",options:[{en:"A. Fresh data",ar:"أ. بيانات جديدة",correct:false},{en:"B. Collected by researcher",ar:"ب. يجمعها الباحث",correct:false},{en:"C. Already collected by others",ar:"ج. سبق جمعها بواسطة آخرين",correct:true},{en:"D. Always unreliable",ar:"د. غير موثوقة دائمًا",correct:false}],explain_ar:"البيانات الثانوية هي البيانات التي تم جمعها مسبقًا لأغراض أخرى."},
+      // TF (10)
+      {num:6,en:"Biostatistics does not require computer skills.",ar:"الإحصاء الحيوي لا يتطلب مهارات الحاسوب.",isTF:true,correct:false,explain_ar:"خطأ، التحليل الإحصائي يتطلب استخدام برامج حاسوبية."},
+      {num:7,en:"Predictive models help predict diseases.",ar:"النماذج التنبؤية تساعد في التنبؤ بالأمراض.",isTF:true,correct:true,explain_ar:"صحيح، تُستخدم النماذج التنبؤية في توقع الأمراض."},
+      {num:8,en:"Data analysis is the foundation of scientific research.",ar:"تحليل البيانات هو أساس البحث العلمي.",isTF:true,correct:true,explain_ar:"صحيح، البحث العلمي يعتمد على تحليل البيانات."},
+      {num:9,en:"Statistics depends only on guessing.",ar:"الإحصاء يعتمد فقط على التخمين.",isTF:true,correct:false,explain_ar:"خطأ، الإحصاء يعتمد على طرق علمية دقيقة."},
+      {num:10,en:"Observation depends on questionnaires.",ar:"الملاحظة تعتمد على الاستبيانات.",isTF:true,correct:false,explain_ar:"خطأ، الملاحظة هي طريقة مختلفة عن الاستبيانات."},
+      {num:11,en:"Experiments study cause and effect.",ar:"التجارب تدرس السبب والنتيجة.",isTF:true,correct:true,explain_ar:"صحيح، التجارب تهدف لدراسة العلاقة السببية."},
+      {num:12,en:"Focus groups provide detailed insights.",ar:"مجموعات التركيز توفر رؤى تفصيلية.",isTF:true,correct:true,explain_ar:"صحيح، مجموعات التركيز تسمح بالتعمق في آراء المشاركين."},
+      {num:13,en:"Questionnaires always give 100% accurate data.",ar:"الاستبيانات تعطي دائمًا بيانات دقيقة 100%.",isTF:true,correct:false,explain_ar:"خطأ، قد تحتوي الاستبيانات على أخطاء وتحيزات."},
+      {num:14,en:"Local correspondents help collect data from wide areas.",ar:"المراسلون المحليون يساعدون في جمع البيانات من مناطق واسعة.",isTF:true,correct:true,explain_ar:"صحيح، يساعدون في الوصول لمناطق متعددة."},
+      {num:15,en:"Primary data is more specific to research.",ar:"البيانات الأولية أكثر تخصيصًا للبحث.",isTF:true,correct:true,explain_ar:"صحيح، يتم جمعها خصيصًا للبحث الحالي."}
+    ]
+  }
+];
+
+// ======================================================================
+// دوال التطبيق (نفس الوظائف السابقة - لم تتغير)
+// ======================================================================
+function buildSeparateSections(originalBank) {
+  const newBank = [];
+  originalBank.forEach(sec => {
+    const mcq = [];
+    const tf = [];
+    sec.questions.forEach(q => {
+      if (q.isTF !== undefined && q.isTF !== null) tf.push(q);
+      else mcq.push(q);
+    });
+    const renumber = (arr) => arr.map((q, idx) => ({ ...q, num: idx + 1 }));
+    const mcqRenumbered = renumber(mcq);
+    const tfRenumbered = renumber(tf);
+    if (mcqRenumbered.length > 0) {
+      newBank.push({
+        name: sec.name + ' (اختياري)',
+        nameEn: sec.nameEn + ' (MCQ)',
+        originalName: sec.name,
+        questions: mcqRenumbered
+      });
+    }
+    if (tfRenumbered.length > 0) {
+      newBank.push({
+        name: sec.name + ' (صواب/خطأ)',
+        nameEn: sec.nameEn + ' (True/False)',
+        originalName: sec.name,
+        questions: tfRenumbered
+      });
+    }
+  });
+  return newBank;
+}
+
+const QUESTION_BANK = buildSeparateSections(ORIGINAL_BANK);
+const LS_KEY='statistics_progress_v3';
+let state={mode:'practice',order:'device',showTranslation:true,timerSeconds:0,quizQuestions:[],currentIndex:0,correctCount:0,wrongCount:0,answered:false,selectedOptionIdx:null,sessionMistakes:[],timerInterval:null,timeLeft:0,questionStates:[]};
+let maleEnglishVoice=null,currentExplainLang='ar',currentExplainName='';
+
+function setTheme(t){document.body.classList.toggle('light',t==='light');document.querySelectorAll('.theme-toggle button').forEach(b=>{b.classList.toggle('active',b.dataset.theme===t)});localStorage.setItem('statistics_theme',t)}
+function loadProgress(){try{const r=localStorage.getItem(LS_KEY);if(!r)return{attempted:{},mistakes:{}};return JSON.parse(r)}catch(e){return{attempted:{},mistakes:{}}}}
+function saveProgress(p){localStorage.setItem(LS_KEY,JSON.stringify(p))}
+function qid(s,n){return s+'___'+n}
+
+function showExplanation(name){currentExplainName=name;const box=document.getElementById('section-explanation'),title=document.getElementById('explain-title'),textDiv=document.getElementById('explain-text');const data={};
+data["أساسيات العينات"]={text_ar:"أساسيات أخذ العينات:\n- المجتمع: المجموعة الكاملة.\n- العينة: جزء من المجتمع.\n- العينات الاحتمالية: عشوائية (بسيطة، طبقية، منتظمة، عنقودية).\n- العينات غير الاحتمالية: غير عشوائية (ملاءمة، حكم، حصص، هادفة).",text_en:"Sampling Basics:\n- Population: entire group.\n- Sample: subset.\n- Probability sampling: random (simple, stratified, systematic, cluster).\n- Nonprobability: non-random (convenience, judgment, quota, purposive)."};
+data["إحصاءات المستشفيات والسجلات الطبية"]={text_ar:"إحصاءات المستشفيات والسجلات الطبية:\n- إحصاء المرضى الداخليين: عند منتصف الليل.\n- يوم خدمة المريض: 24 ساعة.\n- السجلات الطبية: تحتوي على تاريخ المريض، التشخيص، والعلاج.\n- تستخدم في التخطيط، التقاضي، التعليم، وتتبع الأمراض.",text_en:"Hospital & Medical Records:\n- Inpatient census: at midnight.\n- Service day: 24 hours.\n- Medical records: patient history, diagnosis, treatment.\n- Used for planning, legal, education, disease tracking."};
+data["عرض البيانات"]={text_ar:"عرض البيانات:\n- الجداول: صفوف وأعمدة.\n- المخطط العمودي: مقارنة الفئات.\n- المخطط الدائري: النسب المئوية.\n- الرسم الخطي: التغيرات الزمنية.\n- مخطط التشتت: العلاقة بين متغيرين.\n- المدرج التكراري: البيانات المستمرة.",text_en:"Data Presentation:\n- Tables: rows & columns.\n- Bar chart: compare categories.\n- Pie chart: percentages.\n- Line graph: time trends.\n- Scatter plot: relationship.\n- Histogram: continuous data."};
+data["الإحصاءات الحيوية"]={text_ar:"الإحصاءات الحيوية:\n- المواليد، الوفيات، الزواج.\n- معدل المواليد الخام: (مواليد ÷ سكان) × 1000.\n- معدل الخصوبة: (مواليد ÷ نساء 15-49) × 1000.\n- الانتشار: الحالات الموجودة.\n- الحدوث: الحالات الجديدة.\n- ICD: التصنيف الدولي للأمراض.",text_en:"Vital Statistics:\n- Births, deaths, marriage.\n- Crude birth rate: (births ÷ population) × 1000.\n- Fertility rate: (births ÷ women 15-49) × 1000.\n- Prevalence: existing cases.\n- Incidence: new cases.\n- ICD: International Classification of Diseases."};
+data["Midterm"]={text_ar:"أسئلة منتصف الفصل (Midterm):\nتشمل مفاهيم أساسية في الإحصاء: التعريف، الاستبيان، برامج التحليل، البيانات الأولية والثانوية، مهارات الحاسوب، النماذج التنبؤية، تحليل البيانات، التجارب، مجموعات التركيز، وغيرها.",text_en:"Midterm questions:\nCovers basic statistics concepts: definition, surveys, analysis software, primary/secondary data, computer skills, predictive models, data analysis, experiments, focus groups, etc."};
+const d=data[name];title.textContent=name;if(!d){textDiv.textContent=currentExplainLang==='ar'?'لا يوجد شرح':'No explanation.';box.classList.add('show');updateExplainTextClass();return;}const txt=currentExplainLang==='ar'?d.text_ar:d.text_en;textDiv.innerHTML=txt.replace(/\n/g,'<br>');updateExplainTextClass();box.classList.add('show');}
+function updateExplainTextClass(){const t=document.getElementById('explain-text');t.classList.remove('ar','en');t.classList.add(currentExplainLang);}
+function closeExplanation(){document.getElementById('section-explanation').classList.remove('show');}
+function setExplainLang(l){currentExplainLang=l;document.querySelectorAll('.explain-controls .lang-btn').forEach(b=>{b.classList.toggle('active',b.dataset.lang===l)});if(currentExplainName)showExplanation(currentExplainName);}
+function updateHomeStats(){const p=loadProgress(),keys=Object.keys(p.attempted||{});let c=0,w=0;keys.forEach(k=>{if(p.attempted[k]==='correct')c++;else w++});const total=keys.length,pct=total?Math.round((c/total)*100):0;document.getElementById('statAttempted').textContent=total;document.getElementById('statCorrect').textContent=c;document.getElementById('statWrong').textContent=w;document.getElementById('progressPercent').innerHTML=pct+'<small>%</small>';const circle=document.getElementById('progressCircle'),circ=176;circle.style.strokeDashoffset=circ-(pct/100)*circ;updateWeakSectionSuggestion(p);}
+function updateWeakSectionSuggestion(p){const att=p.attempted||{};let bestIdx=-1,bestRate=0,bestName='';QUESTION_BANK.forEach((sec,idx)=>{let a=0,w=0;sec.questions.forEach(q=>{const k=qid(sec.name,q.num);if(att[k]!==undefined){a++;if(att[k]==='wrong')w++}});if(a>=2){const rate=w/a;if(rate>bestRate){bestRate=rate;bestIdx=idx;bestName=sec.name}}});const link=document.getElementById('weakLink');if(bestIdx>=0&&bestRate>0){link.style.display='flex';document.getElementById('weakSectionName').textContent=bestName;document.getElementById('weakSectionRate').textContent=Math.round(bestRate*100)+'%';link.dataset.sectionIdx=bestIdx;}else link.style.display='none';}
+function buildSectionList(){const wrap=document.getElementById('section-list');wrap.innerHTML='';QUESTION_BANK.forEach((sec,idx)=>{const div=document.createElement('div');div.className='section-item active';div.dataset.idx=idx;const nameSpan=document.createElement('span');nameSpan.textContent=sec.nameEn;const infoBtn=document.createElement('button');infoBtn.className='info-btn';infoBtn.innerHTML='<i class="fas fa-info-circle"></i>';infoBtn.title="شرح القسم";infoBtn.onclick=(e)=>{e.stopPropagation();showExplanation(sec.originalName)};const cntSpan=document.createElement('span');cntSpan.className='cnt';cntSpan.textContent=sec.questions.length;div.appendChild(nameSpan);div.appendChild(infoBtn);div.appendChild(cntSpan);div.onclick=()=>{div.classList.toggle('active');updateToggleAllButton();};wrap.appendChild(div)});updateToggleAllButton();}
+function toggleAllSections(){const items=document.querySelectorAll('#section-list .section-item');const allActive=Array.from(items).every(el=>el.classList.contains('active'));items.forEach(el=>el.classList.toggle('active',!allActive));updateToggleAllButton();}
+function updateToggleAllButton(){const items=document.querySelectorAll('#section-list .section-item');const activeCount=document.querySelectorAll('#section-list .section-item.active').length;const btn=document.getElementById('selectAllBtn');if(activeCount===items.length&&items.length>0){btn.textContent='إلغاء الكل';}else{btn.textContent='تحديد الكل';}}
+function toggleOptions(t){document.querySelectorAll('.sub-options').forEach(e=>e.classList.remove('show'));const target=document.getElementById(t);if(target)target.classList.add('show');document.querySelectorAll('.action-icon').forEach(e=>e.classList.remove('active'));const activeIcon=document.querySelector(`.action-icon[data-target="${t}"]`);if(activeIcon)activeIcon.classList.add('active');}
+function closeAllOptions(){document.querySelectorAll('.sub-options').forEach(e=>e.classList.remove('show'));document.querySelectorAll('.action-icon').forEach(e=>e.classList.remove('active'));const def=document.querySelector('.action-icon[data-target="modeOptions"]');if(def)def.classList.add('active');}
+function selectMode(m){state.mode=m;document.querySelectorAll('#modeOptions .action-btn').forEach(e=>{e.classList.toggle('active',e.dataset.mode===m)});closeAllOptions();}
+function selectOrder(o){state.order=o;document.querySelectorAll('#orderOptions .action-btn').forEach(e=>{e.classList.toggle('active',e.dataset.order===o)});closeAllOptions();}
+function selectTranslate(t){state.showTranslation=(t==='yes');document.querySelectorAll('#langOptions .action-btn').forEach(e=>{e.classList.toggle('active',e.dataset.translate===t)});closeAllOptions();}
+function selectTimer(s){state.timerSeconds=s;document.querySelectorAll('#timerOptions .action-btn').forEach(e=>{e.classList.toggle('active',parseInt(e.dataset.timer)===s)});closeAllOptions();}
+function enterApp(){document.getElementById('main-screen').style.display='block';buildSectionList();updateHomeStats();const savedTheme=localStorage.getItem('statistics_theme')||'dark';setTheme(savedTheme);if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.getVoices();maleEnglishVoice=null;}}}
+function goHome(){stopTimer();document.getElementById('screen-quiz').classList.remove('active');document.getElementById('screen-results').classList.remove('active');document.getElementById('main-screen').style.display='block';updateHomeStats();}
+function quitQuiz(){if(confirm('متأكد تخرج؟')){stopTimer();goHome();}}
+function resetProgress(){if(confirm('متأكد تصفير التقدم؟')){localStorage.removeItem(LS_KEY);updateHomeStats();}}
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a;}
+function startQuiz(){const activeEls=document.querySelectorAll('#section-list .section-item.active');if(activeEls.length===0){alert('اختار جزء واحد على الأقل!');return;}const idxs=Array.from(activeEls).map(el=>parseInt(el.dataset.idx));let qs=[];idxs.forEach(idx=>{const sec=QUESTION_BANK[idx];sec.questions.forEach(q=>{qs.push(Object.assign({},q,{sectionName:sec.name}));});});if(qs.length===0){alert('هذا القسم لا يحتوي على أسئلة!');return;}if(state.order==='random')qs=shuffleArray(qs);state.quizQuestions=qs;state.currentIndex=0;state.correctCount=0;state.wrongCount=0;state.sessionMistakes=[];state.questionStates=qs.map(()=>({selectedOption:null,answered:false,isCorrect:false,chosenIdxs:[]}));document.getElementById('main-screen').style.display='none';document.getElementById('screen-quiz').classList.add('active');document.getElementById('screen-results').classList.remove('active');renderQuestion();}
+function reviewMistakes(){const p=loadProgress();const mistakeKeys=Object.keys(p.mistakes||{});if(mistakeKeys.length===0){alert('مفيش أخطاء للمراجعة 🎉');return;}let qs=[];QUESTION_BANK.forEach(sec=>{sec.questions.forEach(q=>{const k=qid(sec.name,q.num);if(mistakeKeys.includes(k))qs.push(Object.assign({},q,{sectionName:sec.name}));});});state.quizQuestions=qs;state.currentIndex=0;state.correctCount=0;state.wrongCount=0;state.sessionMistakes=[];state.mode='practice';state.questionStates=qs.map(()=>({selectedOption:null,answered:false,isCorrect:false,chosenIdxs:[]}));document.getElementById('main-screen').style.display='none';document.getElementById('screen-quiz').classList.add('active');document.getElementById('screen-results').classList.remove('active');renderQuestion();}
+function startWeakSectionQuiz(){const link=document.getElementById('weakLink');const idx=link.dataset.sectionIdx;if(idx===undefined)return;document.querySelectorAll('#section-list .section-item').forEach(el=>{el.classList.toggle('active',el.dataset.idx==idx)});startQuiz();}
+function renderQuestion(){
+  const idx=state.currentIndex, q=state.quizQuestions[idx], st=state.questionStates[idx];
+  state.answered=st.answered; state.selectedOptionIdx=st.selectedOption;
+  const total=state.quizQuestions.length;
+  document.getElementById('quiz-position').innerHTML=`<i class="fas fa-question-circle"></i> ${idx+1} / ${total}`;
+  document.getElementById('quiz-score').innerHTML=`<i class="fas fa-check-circle" style="color:var(--success);"></i> ${state.correctCount} <i class="fas fa-times-circle" style="color:var(--danger);margin-right:4px;"></i> ${state.wrongCount}`;
+  document.getElementById('progress-bar').style.width=((idx)/total*100)+'%';
+  let tagText=`<i class="fas fa-tag"></i> ${q.sectionName}`;if(q.isTF)tagText+=` <span class="tf-badge">صواب / خطأ</span>`;document.getElementById('q-section-tag').innerHTML=tagText;
+  const qEn=document.getElementById('q-en');wrapEnglishText(`${q.num}. ${q.en}`,qEn);
+  const qAr=document.getElementById('q-ar');qAr.textContent=q.ar||'';qAr.style.display=state.showTranslation&&q.ar?'block':'none';
+  const opts=document.getElementById('options');opts.innerHTML='';
+  if(q.isTF){
+    [{en:"True",ar:"صواب"},{en:"False",ar:"خطأ"}].forEach((opt,i)=>{
+      const div=document.createElement('div');div.className='option';div.dataset.idx=i;
+      const isCorrect=(i===0)?q.correct===true:q.correct===false;
+      div.dataset.correct=isCorrect?'true':'false';
+      const enDiv=document.createElement('div');enDiv.className='opt-en';wrapEnglishText(opt.en,enDiv);
+      const arDiv=document.createElement('div');arDiv.className='opt-ar';arDiv.textContent=opt.ar||'';arDiv.style.display=state.showTranslation&&opt.ar?'block':'none';
+      const mark=document.createElement('span');mark.className='mark';
+      div.appendChild(enDiv);div.appendChild(arDiv);div.appendChild(mark);
+      div.onclick=()=>onOptionClick(i);
+      opts.appendChild(div);
+    });
+  } else {
+    q.options.forEach((opt,i)=>{
+      const div=document.createElement('div');div.className='option';div.dataset.idx=i;div.dataset.correct=opt.correct?'true':'false';
+      const enDiv=document.createElement('div');enDiv.className='opt-en';wrapEnglishText(opt.en,enDiv);
+      const arDiv=document.createElement('div');arDiv.className='opt-ar';arDiv.textContent=opt.ar||'';arDiv.style.display=state.showTranslation&&opt.ar?'block':'none';
+      const mark=document.createElement('span');mark.className='mark';
+      div.appendChild(enDiv);div.appendChild(arDiv);div.appendChild(mark);
+      div.onclick=()=>onOptionClick(i);
+      opts.appendChild(div);
+    });
+  }
+  if(st.answered){
+    const chosenIdxs=st.chosenIdxs;
+    document.querySelectorAll('.option').forEach(el=>{
+      const idxOpt=parseInt(el.dataset.idx);
+      el.classList.add('disabled');
+      const isCorrectOption=el.dataset.correct==='true';
+      if(isCorrectOption){el.classList.add('correct');el.querySelector('.mark').textContent='✅';}
+      else if(chosenIdxs.includes(idxOpt)){el.classList.add('wrong');el.querySelector('.mark').textContent='❌';}
+      if(st.selectedOption===idxOpt)el.classList.add('selected');
+    });
+    const fb=document.getElementById('feedback');
+    fb.classList.remove('hidden');
+    fb.className='feedback-box '+(st.isCorrect?'correct':'wrong');
+    let correctLabels='';
+    if(q.isTF){correctLabels=q.correct?'True (صواب)':'False (خطأ)';}else{correctLabels=q.options.map((o,i)=>o.correct?o.en:null).filter(Boolean).join('، ');}
+    fb.innerHTML=`<div class="fb-title">${st.isCorrect?'✅ صحيحة!':'❌ غلط'}</div>${!st.isCorrect?`<div><b>الصح:</b> ${correctLabels}</div>`:''}<div class="fb-explain">💡 ${q.explain_ar||''}</div>`;
+  } else {
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('feedback').innerHTML='';
+  }
+  const nextBtn=document.getElementById('btn-next');const prevBtn=document.getElementById('btn-prev');
+  prevBtn.disabled=(idx===0);
+  const isLast=idx===total-1;
+  const finishLabel=isLast?'إنهاء ✅':'التالي ⬅️';
+  if (state.mode === 'test') {
+    nextBtn.disabled = (state.selectedOptionIdx === null);
+    nextBtn.innerHTML = `<i class="fas fa-arrow-left"></i> ${finishLabel}`;
+    nextBtn.onclick = () => {
+      if (state.selectedOptionIdx === null) return;
+      if (!state.answered) {
+        const q = state.quizQuestions[state.currentIndex];
+        let isCorrect = false;
+        if (q.isTF) {
+          const opt = document.querySelector(`.option[data-idx="${state.selectedOptionIdx}"]`);
+          isCorrect = opt ? opt.dataset.correct === 'true' : false;
+        } else {
+          isCorrect = q.options[state.selectedOptionIdx].correct;
+        }
+        finalizeAnswer(isCorrect, [state.selectedOptionIdx]);
+        if (state.currentIndex < state.quizQuestions.length - 1) {
+          state.currentIndex++;
+          renderQuestion();
+        } else {
+          showResults();
+        }
+      } else {
+        if (state.currentIndex < state.quizQuestions.length - 1) {
+          state.currentIndex++;
+          renderQuestion();
+        } else {
+          showResults();
+        }
+      }
+    };
+  } else {
+    nextBtn.disabled = false;
+    nextBtn.innerHTML = isLast ? `<i class="fas fa-flag-checkered"></i> إنهاء` : `<i class="fas fa-arrow-left"></i> التالي`;
+    nextBtn.onclick = () => {
+      if (!state.answered) {
+        alert('يجب اختيار إجابة أولاً!');
+        return;
+      }
+      if (state.currentIndex < state.quizQuestions.length - 1) {
+        state.currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    };
+  }
+  if(!st.answered) startTimer(); else stopTimer();
+}
+function onOptionClick(i){
+  if(state.answered)return;
+  state.selectedOptionIdx=i;
+  document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));
+  document.querySelector(`.option[data-idx="${i}"]`).classList.add('selected');
+  if(state.mode==='test'){
+    document.getElementById('btn-next').disabled = false;
+  } else {
+    submitSingleAnswer(i);
+  }
+}
+function submitSingleAnswer(i){
+  const q=state.quizQuestions[state.currentIndex];
+  let isCorrect=false;
+  if(q.isTF){const opt=document.querySelector(`.option[data-idx="${i}"]`);isCorrect=opt.dataset.correct==='true';}
+  else{isCorrect=!!q.options[i].correct;}
+  finalizeAnswer(isCorrect,[i]);
+}
+function finalizeAnswer(isCorrect,chosenIdxs){
+  stopTimer();
+  state.answered=true;
+  const idx=state.currentIndex, st=state.questionStates[idx];
+  st.selectedOption=state.selectedOptionIdx;
+  st.answered=true;
+  st.isCorrect=isCorrect;
+  st.chosenIdxs=chosenIdxs;
+  const q=state.quizQuestions[idx];
+  if(isCorrect)state.correctCount++;
+  else state.wrongCount++;
+  const p=loadProgress();const key=qid(q.sectionName,q.num);
+  p.attempted=p.attempted||{};p.mistakes=p.mistakes||{};
+  p.attempted[key]=isCorrect?'correct':'wrong';
+  if(isCorrect){delete p.mistakes[key];}else{p.mistakes[key]=true;}
+  saveProgress(p);
+  if(!isCorrect){state.sessionMistakes.push({q,chosenIdxs});}
+  renderQuestion();
+}
+function previousQuestion(){
+  if(state.currentIndex>0){
+    state.currentIndex--;
+    renderQuestion();
+  }
+}
+function showResults(){
+  stopTimer();
+  document.getElementById('screen-quiz').classList.remove('active');
+  document.getElementById('screen-results').classList.add('active');
+  document.getElementById('mistakes-list-wrap').classList.add('hidden');
+  const total=state.quizQuestions.length,pct=total?Math.round((state.correctCount/total)*100):0;
+  document.getElementById('result-pct').textContent=pct+'%';
+  document.getElementById('score-circle').style.setProperty('--pct',pct);
+  document.getElementById('res-total').textContent=total;
+  document.getElementById('res-correct').textContent=state.correctCount;
+  document.getElementById('res-wrong').textContent=state.wrongCount;
+  const btnMistakes=document.getElementById('btn-show-mistakes');
+  if(state.sessionMistakes.length>0)btnMistakes.classList.remove('hidden');else btnMistakes.classList.add('hidden');
+}
+function showMistakesList(){const wrap=document.getElementById('mistakes-list-wrap'),list=document.getElementById('mistakes-list');list.innerHTML='';state.sessionMistakes.forEach(m=>{const q=m.q;let yourAnswers='',correctAnswers='';if(q.isTF){yourAnswers=m.chosenIdxs.map(i=>document.querySelector(`.option[data-idx="${i}"] .opt-en`)?.textContent||'').join('، ');correctAnswers=q.correct?'True (صواب)':'False (خطأ)';}else{yourAnswers=m.chosenIdxs.map(i=>q.options[i].en).join('، ');correctAnswers=q.options.map((o,i)=>o.correct?o.en:null).filter(Boolean).join('، ');}const div=document.createElement('div');div.className='mistake-item';const toggleBtn=document.createElement('button');toggleBtn.className='mistake-toggle';toggleBtn.innerHTML='<i class="fas fa-eye"></i> عرض السؤال';const detailDiv=document.createElement('div');detailDiv.className='mistake-detail';detailDiv.style.display='none';const qHeader=document.createElement('div');qHeader.style.fontWeight='bold';qHeader.style.marginBottom='8px';qHeader.textContent=`${q.num}. ${q.en}`;detailDiv.appendChild(qHeader);const optsDiv=document.createElement('div');if(q.isTF){[{en:"True (صواب)",correct:q.correct===true},{en:"False (خطأ)",correct:q.correct===false}].forEach((opt,i)=>{const row=document.createElement('div');row.className='opt-row';const label=document.createElement('span');label.className='opt-label';label.textContent=opt.en;const status=document.createElement('span');status.className='opt-status';if(opt.correct){status.textContent='✅';status.style.color='var(--success)';}else if(m.chosenIdxs.includes(i)){status.textContent='❌';status.style.color='var(--danger)';}else{status.textContent='—';status.style.color='var(--muted)';}row.appendChild(label);row.appendChild(status);optsDiv.appendChild(row)});}else{q.options.forEach((opt,i)=>{const row=document.createElement('div');row.className='opt-row';const label=document.createElement('span');label.className='opt-label';label.textContent=opt.en;const status=document.createElement('span');status.className='opt-status';if(opt.correct){status.textContent='✅';status.style.color='var(--success)';}else if(m.chosenIdxs.includes(i)){status.textContent='❌';status.style.color='var(--danger)';}else{status.textContent='—';status.style.color='var(--muted)';}row.appendChild(label);row.appendChild(status);optsDiv.appendChild(row)});}detailDiv.appendChild(optsDiv);const explainDiv=document.createElement('div');explainDiv.style.marginTop='8px';explainDiv.style.fontStyle='italic';explainDiv.style.color='var(--muted)';explainDiv.textContent=`💡 ${q.explain_ar||''}`;detailDiv.appendChild(explainDiv);toggleBtn.onclick=()=>{const vis=detailDiv.style.display!=='none';detailDiv.style.display=vis?'none':'block';toggleBtn.innerHTML=vis?'<i class="fas fa-eye"></i> عرض السؤال':'<i class="fas fa-eye-slash"></i> إخفاء السؤال';};div.innerHTML=`<div class="m-q">${q.num}. ${q.en}</div><div class="m-you">إجابتك: ${yourAnswers}</div><div class="m-correct">الصح: ${correctAnswers}</div>`;div.appendChild(toggleBtn);div.appendChild(detailDiv);list.appendChild(div);});wrap.classList.remove('hidden');wrap.scrollIntoView({behavior:'smooth'});}
+function stopTimer(){if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}const b=document.getElementById('timer-badge');b.classList.add('hidden');b.classList.remove('warn','danger');}
+function startTimer(){stopTimer();if(!state.timerSeconds||state.timerSeconds<=0)return;const badge=document.getElementById('timer-badge');state.timeLeft=state.timerSeconds;badge.classList.remove('hidden','warn','danger');badge.innerHTML=`<i class="fas fa-hourglass-half"></i> ${state.timeLeft}`;state.timerInterval=setInterval(()=>{state.timeLeft--;if(state.timeLeft<=0){badge.innerHTML=`<i class="fas fa-hourglass-end"></i> 0`;stopTimer();onTimeUp();return;}badge.innerHTML=`<i class="fas fa-hourglass-half"></i> ${state.timeLeft}`;badge.classList.toggle('warn',state.timeLeft<=3&&state.timeLeft>1);badge.classList.toggle('danger',state.timeLeft<=1);},1000);}
+function onTimeUp(){if(state.answered)return;const q=state.quizQuestions[state.currentIndex];const chosen=state.selectedOptionIdx!==null?[state.selectedOptionIdx]:[];finalizeAnswer(false,chosen);}
+function getMaleEnglishVoice(){if(maleEnglishVoice)return maleEnglishVoice;const voices=window.speechSynthesis.getVoices();let v=voices.find(v=>v.lang==='en-US'&&v.name.toLowerCase().includes('male'));if(!v)v=voices.find(v=>v.lang==='en-GB'&&v.name.toLowerCase().includes('male'));if(!v)v=voices.find(v=>v.lang.startsWith('en')&&v.name.toLowerCase().includes('male'));if(!v)v=voices.find(v=>v.lang.startsWith('en'));maleEnglishVoice=v;return v;}
+function speakWord(word){if(!window.speechSynthesis)return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(word);u.lang='en-US';u.rate=.7;u.pitch=1;u.volume=1;const v=getMaleEnglishVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);}
+function wrapEnglishText(text,container){if(!container)return;container.innerHTML='';if(!text)return;const words=text.split(' ');words.forEach((word,idx)=>{if(word.trim()===''){container.appendChild(document.createTextNode(' '));return;}const span=document.createElement('span');span.className='word-en';span.textContent=word;let pressTimer=null;const startPress=()=>{pressTimer=setTimeout(()=>{speakWord(word);span.classList.add('speaking');setTimeout(()=>span.classList.remove('speaking'),600);const hint=document.getElementById('speech-hint');hint.textContent=`🔊 ${word}`;hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),1000);},1000);};const endPress=()=>{if(pressTimer){clearTimeout(pressTimer);pressTimer=null;}};span.addEventListener('pointerdown',startPress);span.addEventListener('pointerup',endPress);span.addEventListener('pointerleave',endPress);span.addEventListener('touchstart',startPress,{passive:true});span.addEventListener('touchend',endPress,{passive:true});span.addEventListener('touchcancel',endPress,{passive:true});container.appendChild(span);if(idx<words.length-1)container.appendChild(document.createTextNode(' '));});}
+document.addEventListener('click',function(e){const btn=e.target.closest('.big-btn');if(!btn)return;const rect=btn.getBoundingClientRect();const ripple=document.createElement('span');ripple.className='ripple';const size=Math.max(rect.width,rect.height);ripple.style.width=ripple.style.height=size+'px';ripple.style.left=(e.clientX-rect.left-size/2)+'px';ripple.style.top=(e.clientY-rect.top-size/2)+'px';btn.appendChild(ripple);setTimeout(()=>ripple.remove(),500);});
+
+document.addEventListener('DOMContentLoaded', () => {
+  enterApp();
+});
+</script>
+</body>
+</html>
